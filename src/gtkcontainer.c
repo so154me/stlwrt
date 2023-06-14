@@ -145,7 +145,7 @@ __gtk_container_get_type (void)
 	(GClassInitFunc) gtk_container_class_init,
 	NULL        /* class_finalize */,
 	NULL        /* class_data */,
-	sizeof (GtkContainer),
+	sizeof (GtkContainerProps),
 	0           /* n_preallocs */,
 	(GInstanceInitFunc) gtk_container_init,
 	NULL,       /* value_table */
@@ -1294,7 +1294,7 @@ gtk_container_get_resize_container (GtkContainer *container)
 
   while (gtk_widget_get_props (widget)->parent)
     {
-      gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+      widget = gtk_widget_get_props (widget)->parent;
       if (GTK_IS_RESIZE_CONTAINER (widget))
 	break;
     }
@@ -1349,7 +1349,7 @@ ___gtk_container_queue_resize (GtkContainer *container)
 	  !gtk_widget_get_props (widget)->parent)
 	break;
       
-      gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+      widget = gtk_widget_get_props (widget)->parent;
     }
       
   if (resize_container)

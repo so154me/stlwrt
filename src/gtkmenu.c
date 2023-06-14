@@ -257,12 +257,6 @@ static const gchar attach_data_key[] = "gtk-menu-attach-data";
 
 static guint menu_signals[LAST_SIGNAL] = { 0 };
 
-static GtkMenuPrivate *
-gtk_menu_get_instance_private (GtkMenu *menu)
-{
-  return G_TYPE_INSTANCE_GET_PRIVATE (menu, GTK_TYPE_MENU, GtkMenuPrivate);
-}
-
 STLWRT_DEFINE_VTYPE (GtkMenu, gtk_menu, GTK_TYPE_MENU_SHELL, G_TYPE_FLAG_NONE,
                      G_ADD_PRIVATE (GtkMenu))
 
@@ -1395,7 +1389,7 @@ __gtk_menu_popup (GtkMenu		    *menu,
 	      viewable = FALSE;
 	      break;
 	    }
-	  gtk_widget_get_props (tmp) = gtk_widget_get_props (tmp)->parent;
+	  tmp = gtk_widget_get_props (tmp)->parent;
 	}
       
       if (viewable)
@@ -1928,7 +1922,7 @@ gtk_menu_get_toplevel (GtkWidget *menu)
   attach = __gtk_menu_get_attach_widget (GTK_MENU (menu));
 
   if (GTK_IS_MENU_ITEM (attach))
-    gtk_widget_get_props (attach) = gtk_widget_get_props (attach)->parent;
+    attach = gtk_widget_get_props (attach)->parent;
 
   if (GTK_IS_MENU (attach))
     return gtk_menu_get_toplevel (attach);
@@ -4400,7 +4394,7 @@ gtk_menu_scroll_to (GtkMenu *menu,
     {
       gtk_adjustment_get_props (gtk_menu_get_props (menu)->tearoff_adjustment)->value =
 	CLAMP (offset,
-	       0, gtk_adjustment_get_props (gtk_menu_get_props (menu)->tearoff_adjustment)->upper - gtk_adjustment_get_props (gtk_menu_get_props (menu)->tearoff_adjustment))->page_size);
+	       0, gtk_adjustment_get_props (gtk_menu_get_props (menu)->tearoff_adjustment)->upper - gtk_adjustment_get_props (gtk_menu_get_props (menu)->tearoff_adjustment)->page_size);
       __gtk_adjustment_value_changed (gtk_menu_get_props (menu)->tearoff_adjustment);
     }
   

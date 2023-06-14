@@ -1734,7 +1734,7 @@ gtk_paned_set_focus_child (GtkContainer *container,
 	  /* If there is one or more paned widgets between us and the
 	   * focus widget, we want the topmost of those as last_focus
 	   */
-	  for (gtk_widget_get_props (w) = last_focus; gtk_widget_get_props (w) != GTK_WIDGET (paned); gtk_widget_get_props (w) = gtk_widget_get_props (w)->parent)
+	  for (w = last_focus; gtk_widget_get_props (w) != GTK_WIDGET (paned); w = gtk_widget_get_props (w)->parent)
 	    if (GTK_IS_PANED (w))
 	      last_focus = w;
 	  
@@ -1914,7 +1914,7 @@ get_all_panes (GtkPaned *paned)
   GList *result = NULL;
   GtkWidget *w;
   
-  for (gtk_widget_get_props (w) = GTK_WIDGET (paned); gtk_widget_get_props (w) != NULL; gtk_widget_get_props (w) = gtk_widget_get_props (w)->parent)
+  for (w= GTK_WIDGET (paned); gtk_widget_get_props (w) != NULL; w = gtk_widget_get_props (w)->parent)
     {
       if (GTK_IS_PANED (w))
 	topmost = GTK_PANED (w);

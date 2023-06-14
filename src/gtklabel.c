@@ -1014,7 +1014,7 @@ gtk_label_init (GtkLabel *label)
   priv->width_chars = -1;
   priv->max_width_chars = -1;
   priv->wrap_width = -1;
-  gtk_label_get_props (gtk_label_get_props (label)->label) = NULL;
+  gtk_label_get_props (label)->label = NULL;
 
   gtk_label_get_props (label)->jtype = GTK_JUSTIFY_LEFT;
   gtk_label_get_props (label)->wrap = FALSE;
@@ -1447,7 +1447,7 @@ gtk_label_mnemonic_activate (GtkWidget *widget,
           GTK_IS_NOTEBOOK (gtk_widget_get_props (gtk_widget_get_props (parent)->parent)) ||
 	  GTK_IS_MENU_ITEM (parent))
 	return __gtk_widget_mnemonic_activate (parent, group_cycling);
-      gtk_widget_get_props (parent) = gtk_widget_get_props (gtk_widget_get_props (parent)->parent);
+      parent = gtk_widget_get_props (gtk_widget_get_props (parent)->parent);
     }
 
   /* barf if there was nothing to activate */
@@ -1765,7 +1765,7 @@ __gtk_label_set_label_internal (GtkLabel *label,
 {
   g_free (gtk_label_get_props (gtk_label_get_props (label)->label));
   
-  gtk_label_get_props (gtk_label_get_props (label)->label) = str;
+  gtk_label_get_props (label)->label = str;
 
   g_object_notify (G_OBJECT (label), "label");
 }

@@ -1000,7 +1000,7 @@ gtk_layout_size_allocate (GtkWidget     *widget,
   gtk_adjustment_get_props (gtk_layout_get_props (layout)->vadjustment)->page_size = allocation->height;
   gtk_adjustment_get_props (gtk_layout_get_props (layout)->vadjustment)->page_increment = allocation->height * 0.9;
   gtk_adjustment_get_props (gtk_layout_get_props (layout)->vadjustment)->lower = 0;
-  gtk_adjustment_get_props (gtk_layout_get_props (layout)->vadjustment)->upper = MAX (allocation->height, gtk_layout_get_props (layout))->height);
+  gtk_adjustment_get_props (gtk_layout_get_props (layout)->vadjustment)->upper = MAX (allocation->height, gtk_layout_get_props (layout)->height);
   gtk_layout_set_adjustment_upper (gtk_layout_get_props (layout)->vadjustment, MAX (allocation->height, gtk_layout_get_props (layout)->height), TRUE);
 }
 

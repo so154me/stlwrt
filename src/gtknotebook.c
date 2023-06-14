@@ -4205,7 +4205,7 @@ gtk_notebook_set_focus_child (GtkContainer *container,
 		}
 	    }
 
-	  gtk_widget_get_props (page_child) = gtk_widget_get_props (page_child)->parent;
+	  page_child = gtk_widget_get_props (page_child)->parent;
 	}
     }
   

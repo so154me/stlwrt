@@ -3552,7 +3552,7 @@ find_menu_by_path (GtkWidget   *menu,
 	  else
 	    mpath = __gtk_tree_row_reference_get_path (mref);
 	}
-      else if (GTK_IS_CELL_VIEW (GTK_BIN (i->data)->child))
+      else if (GTK_IS_CELL_VIEW (__gtk_bin_get_child(GTK_BIN (i->data))))
 	{
 	  if (skip)
 	    {

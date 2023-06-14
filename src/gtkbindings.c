@@ -807,18 +807,6 @@ __gtk_binding_entry_remove (GtkBindingSet	 *binding_set,
  */
 void
 ___gtk_binding_entry_add_signall (GtkBindingSet  *binding_set,
-                               guint	       keyval,
-                               GdkModifierType modifiers,
-                               const gchar    *signal_name,
-                               GSList	      *binding_args)
-{
-  ___gtk_binding_entry_add_signall (binding_set,
-                                  keyval, modifiers,
-                                  signal_name, binding_args);
-}
-
-void
-___gtk_binding_entry_add_signall (GtkBindingSet  *binding_set,
                                 guint	       keyval,
                                 GdkModifierType modifiers,
                                 const gchar    *signal_name,
@@ -1597,12 +1585,6 @@ gtk_binding_parse_bind (GScanner       *scanner,
  *
  * Deprecated: 2.12: There should be no need to call this function outside GTK+.
  */
-guint
-___gtk_binding_parse_binding (GScanner *scanner)
-{
-  return ___gtk_binding_parse_binding (scanner);
-}
-
 guint
 ___gtk_binding_parse_binding (GScanner *scanner)
 {

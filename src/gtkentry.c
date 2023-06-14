@@ -5787,16 +5787,6 @@ gtk_entry_queue_draw (GtkEntry *entry)
     __gdk_window_invalidate_rect (gtk_entry_get_props (entry)->text_area, NULL, FALSE);
 }
 
-void
-__gtk_entry_reset_im_context (GtkEntry *entry)
-{
-  if (gtk_entry_get_props (entry)->need_im_reset)
-    {
-      gtk_entry_get_props (entry)->need_im_reset = FALSE;
-      __gtk_im_context_reset (gtk_entry_get_props (entry)->im_context);
-    }
-}
-
 /**
  * __gtk_entry_reset_im_context:
  * @entry: a #GtkEntry
@@ -5808,13 +5798,20 @@ __gtk_entry_reset_im_context (GtkEntry *entry)
  *
  * Since: 2.22
  */
+ 
 void
 __gtk_entry_reset_im_context (GtkEntry *entry)
 {
+
   g_return_if_fail (GTK_IS_ENTRY (entry));
 
-  __gtk_entry_reset_im_context (entry);
+  if (gtk_entry_get_props (entry)->need_im_reset)
+    {
+      gtk_entry_get_props (entry)->need_im_reset = FALSE;
+      __gtk_im_context_reset (gtk_entry_get_props (entry)->im_context);
+    }
 }
+
 
 /**
  * __gtk_entry_im_context_filter_keypress:

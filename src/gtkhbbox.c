@@ -95,8 +95,3 @@ ___gtk_hbutton_box_get_layout_default (void)
   return default_layout_style;
 }
 
-GtkButtonBoxStyle
-___gtk_hbutton_box_get_layout_default (void)
-{
-  return default_layout_style;
-}

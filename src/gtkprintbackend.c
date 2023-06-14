@@ -42,6 +42,8 @@ static void gtk_print_backend_get_property (GObject      *object,
                                             GValue       *value,
                                             GParamSpec   *pspec);
 
+STLWRT_DEFINE_FTYPE (GtkPrintBackend, gtk_print_backend, G_TYPE_OBJECT, G_TYPE_FLAG_NONE, ;)
+
 
 enum {
   PRINTER_LIST_CHANGED,
@@ -325,7 +327,8 @@ gtk_print_backend_load_modules (void)
   if (settings)
     g_object_get (settings, "gtk-print-backends", &setting, NULL);
   else
-    setting = g_strdup (STLWRT_PRINT_BACKENDS);
+	// NOTE: use the proper STLWRT_PRINT_BACKENDS from now on.
+    setting = g_strdup ("file,cups");
 
   backends = g_strsplit (setting, ",", -1);
 
@@ -349,7 +352,6 @@ gtk_print_backend_load_modules (void)
  *             GtkPrintBackend           *
  *****************************************/
 
-STLWRT_DEFINE_FTYPE (GtkPrintBackend, gtk_print_backend, G_TYPE_OBJECT, G_TYPE_FLAG_NONE, ;)
 
 static void                 fallback_printer_request_details       (GtkPrinter          *printer);
 static gboolean             fallback_printer_mark_conflicts        (GtkPrinter          *printer,
@@ -454,7 +456,7 @@ gtk_print_backend_init (GtkPrintBackend *backend)
 {
   GtkPrintBackendPrivate *priv;
 
-  priv = backend->priv = _gtk_print_backend_get_instance_private (backend); 
+  priv = backend->priv =gtk_print_backend_get_instance_private (backend); 
 
   priv->printers = g_hash_table_new_full (g_str_hash, g_str_equal, 
 					  (GDestroyNotify) g_free,

@@ -246,11 +246,6 @@ gtk_handle_box_class_init (GtkHandleBoxClass *class)
 		  GTK_TYPE_WIDGET);
 }
 
-static GtkHandleBoxPrivate *
-gtk_handle_box_get_instance_private (GtkHandleBox *hb)
-{
-  return G_TYPE_INSTANCE_GET_PRIVATE (hb, GTK_TYPE_HANDLE_BOX, GtkHandleBoxPrivate);
-}
 
 static void
 gtk_handle_box_init (GtkHandleBox *handle_box)

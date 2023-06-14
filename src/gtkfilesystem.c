@@ -99,18 +99,6 @@ struct _GtkFileSystemPrivate
   GFileMonitor *bookmarks_monitor;
 };
 
-struct _GtkFolderPrivate
-{
-  GFile *folder_file;
-  GHashTable *children;
-  GFileMonitor *directory_monitor;
-  GFileEnumerator *enumerator;
-  GCancellable *cancellable;
-  gchar *attributes;
-
-  guint finished_loading : 1;
-};
-
 struct AsyncFuncData
 {
   GtkFileSystem *file_system;

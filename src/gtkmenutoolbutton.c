@@ -411,7 +411,7 @@ gtk_menu_tool_button_init (GtkMenuToolButton *button)
 
   __gtk_container_add (GTK_CONTAINER (button), box);
 
-  gtk_menu_tool_button_get_props (gtk_menu_tool_button_get_props (button)->priv->button) = real_button;
+  gtk_menu_tool_button_get_props (button)->priv->button = real_button;
   gtk_menu_tool_button_get_props (button)->priv->arrow = arrow;
   gtk_menu_tool_button_get_props (button)->priv->arrow_button = arrow_button;
   gtk_menu_tool_button_get_props (button)->priv->box = box;

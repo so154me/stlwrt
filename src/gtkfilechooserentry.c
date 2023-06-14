@@ -171,7 +171,7 @@ _gtk_file_chooser_entry_init (GtkFileChooserEntry *chooser_entry)
   GtkEntryCompletion *comp;
   GtkCellRenderer *cell;
 
-  chooser_entry->local_only = TRUE;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->local_only = TRUE;
 
   g_object_set (chooser_entry, "truncate-multiline", TRUE, NULL);
 
@@ -218,14 +218,14 @@ gtk_file_chooser_entry_finalize (GObject *object)
 {
   GtkFileChooserEntry *chooser_entry = GTK_FILE_CHOOSER_ENTRY (object);
 
-  if (chooser_entry->base_folder)
-    g_object_unref (chooser_entry->base_folder);
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder)
+    g_object_unref (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder);
 
-  if (chooser_entry->current_folder_file)
-    g_object_unref (chooser_entry->current_folder_file);
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file)
+    g_object_unref (_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file);
 
-  g_free (chooser_entry->dir_part);
-  g_free (chooser_entry->file_part);
+  g_free (_gtk_file_chooser_entry_get_props(chooser_entry)->dir_part);
+  g_free (_gtk_file_chooser_entry_get_props(chooser_entry)->file_part);
 
   G_OBJECT_CLASS (_gtk_file_chooser_entry_parent_class)->finalize (object);
 }
@@ -277,10 +277,10 @@ set_complete_on_load (GtkFileChooserEntry *chooser_entry,
   /* a completion was triggered, but we couldn't do it.
    * So no text was inserted when pressing tab, so we beep
    */
-  if (chooser_entry->complete_on_load && !complete_on_load)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->complete_on_load && !complete_on_load)
     __gtk_widget_error_bell (GTK_WIDGET (chooser_entry));
 
-  chooser_entry->complete_on_load = complete_on_load;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->complete_on_load = complete_on_load;
 }
 
 static gboolean
@@ -314,8 +314,8 @@ __gtk_file_chooser_get_file_for_text (GtkFileChooserEntry *chooser_entry,
 
   if (str[0] == '~' || g_path_is_absolute (str) || has_uri_scheme (str))
     file = g_file_parse_name (str);
-  else if (chooser_entry->base_folder != NULL)
-    file = g_file_resolve_relative_path (chooser_entry->base_folder, str);
+  else if (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder != NULL)
+    file = g_file_resolve_relative_path (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder, str);
   else
     file = NULL;
 
@@ -357,9 +357,9 @@ gtk_file_chooser_get_directory_for_text (GtkFileChooserEntry *chooser_entry,
 static void
 explicitly_complete (GtkFileChooserEntry *chooser_entry)
 {
-  chooser_entry->complete_on_load = FALSE;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->complete_on_load = FALSE;
 
-  if (chooser_entry->completion_store)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store)
     {
       char *completion, *text;
       gsize completion_len, text_len;
@@ -396,7 +396,7 @@ gtk_file_chooser_entry_grab_focus (GtkWidget *widget)
 static void
 start_explicit_completion (GtkFileChooserEntry *chooser_entry)
 {
-  if (chooser_entry->current_folder_loaded)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_loaded)
     explicitly_complete (chooser_entry);
   else
     set_complete_on_load (chooser_entry, TRUE);
@@ -414,7 +414,7 @@ gtk_file_chooser_entry_tab_handler (GtkWidget *widget,
   chooser_entry = GTK_FILE_CHOOSER_ENTRY (widget);
   editable = GTK_EDITABLE (widget);
 
-  if (!chooser_entry->eat_tabs)
+  if (!_gtk_file_chooser_entry_get_props(chooser_entry)->eat_tabs)
     return FALSE;
 
   if (event->keyval != GDK_KEY_Tab)
@@ -452,13 +452,13 @@ update_inline_completion (GtkFileChooserEntry *chooser_entry)
 {
   GtkEntryCompletion *completion = __gtk_entry_get_completion (GTK_ENTRY (chooser_entry));
 
-  if (!chooser_entry->current_folder_loaded)
+  if (!_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_loaded)
     {
       __gtk_entry_completion_set_inline_completion (completion, FALSE);
       return;
     }
 
-  switch (chooser_entry->action)
+  switch (_gtk_file_chooser_entry_get_props(chooser_entry)->action)
     {
     case GTK_FILE_CHOOSER_ACTION_OPEN:
     case GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER:
@@ -474,13 +474,13 @@ update_inline_completion (GtkFileChooserEntry *chooser_entry)
 static void
 discard_completion_store (GtkFileChooserEntry *chooser_entry)
 {
-  if (!chooser_entry->completion_store)
+  if (!_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store)
     return;
 
   __gtk_entry_completion_set_model (__gtk_entry_get_completion (GTK_ENTRY (chooser_entry)), NULL);
   update_inline_completion (chooser_entry);
-  g_object_unref (chooser_entry->completion_store);
-  chooser_entry->completion_store = NULL;
+  g_object_unref (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store);
+  _gtk_file_chooser_entry_get_props(chooser_entry)->completion_store = NULL;
 }
 
 static gboolean
@@ -499,7 +499,7 @@ completion_store_set (GtkFileSystemModel  *model,
   switch (column)
     {
     case FULL_PATH_COLUMN:
-      prefix = chooser_entry->dir_part;
+      prefix = _gtk_file_chooser_entry_get_props(chooser_entry)->dir_part;
       /* fall through */
     case DISPLAY_NAME_COLUMN:
       if (_gtk_file_info_consider_as_directory (info))
@@ -523,27 +523,27 @@ completion_store_set (GtkFileSystemModel  *model,
 static void
 populate_completion_store (GtkFileChooserEntry *chooser_entry)
 {
-  chooser_entry->completion_store = GTK_TREE_MODEL (
-      _gtk_file_system_model_new_for_directory (chooser_entry->current_folder_file,
+  _gtk_file_chooser_entry_get_props(chooser_entry)->completion_store = GTK_TREE_MODEL (
+      _gtk_file_system_model_new_for_directory (_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file,
                                                 "standard::name,standard::display-name,standard::type",
                                                 completion_store_set,
                                                 chooser_entry,
                                                 N_COLUMNS,
                                                 G_TYPE_STRING,
                                                 G_TYPE_STRING));
-  g_signal_connect (chooser_entry->completion_store, "finished-loading",
+  g_signal_connect (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store, "finished-loading",
 		    G_CALLBACK (finished_loading_cb), chooser_entry);
 
-  _gtk_file_system_model_set_filter_folders (GTK_FILE_SYSTEM_MODEL (chooser_entry->completion_store),
+  _gtk_file_system_model_set_filter_folders (GTK_FILE_SYSTEM_MODEL (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
                                              TRUE);
-  _gtk_file_system_model_set_show_files (GTK_FILE_SYSTEM_MODEL (chooser_entry->completion_store),
-                                         chooser_entry->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
-                                         chooser_entry->action == GTK_FILE_CHOOSER_ACTION_SAVE);
-  __gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (chooser_entry->completion_store),
+  _gtk_file_system_model_set_show_files (GTK_FILE_SYSTEM_MODEL (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
+                                         _gtk_file_chooser_entry_get_props(chooser_entry)->action == GTK_FILE_CHOOSER_ACTION_OPEN ||
+                                         _gtk_file_chooser_entry_get_props(chooser_entry)->action == GTK_FILE_CHOOSER_ACTION_SAVE);
+  __gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
 					DISPLAY_NAME_COLUMN, GTK_SORT_ASCENDING);
 
   __gtk_entry_completion_set_model (__gtk_entry_get_completion (GTK_ENTRY (chooser_entry)),
-				  chooser_entry->completion_store);
+				  _gtk_file_chooser_entry_get_props(chooser_entry)->completion_store);
 }
 
 /* Callback when the current folder finishes loading */
@@ -554,7 +554,7 @@ finished_loading_cb (GtkFileSystemModel  *model,
 {
   GtkEntryCompletion *completion;
 
-  chooser_entry->current_folder_loaded = TRUE;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_loaded = TRUE;
 
   if (error)
     {
@@ -563,7 +563,7 @@ finished_loading_cb (GtkFileSystemModel  *model,
       return;
     }
 
-  if (chooser_entry->complete_on_load)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->complete_on_load)
     explicitly_complete (chooser_entry);
 
   __gtk_widget_set_tooltip_text (GTK_WIDGET (chooser_entry), NULL);
@@ -584,35 +584,35 @@ set_completion_folder (GtkFileChooserEntry *chooser_entry,
 		       char                *dir_part)
 {
   if (folder_file &&
-      chooser_entry->local_only
+      _gtk_file_chooser_entry_get_props(chooser_entry)->local_only
       && !_gtk_file_has_native_path (folder_file))
     folder_file = NULL;
 
-  if (((chooser_entry->current_folder_file
+  if (((_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file
 	&& folder_file
-	&& g_file_equal (folder_file, chooser_entry->current_folder_file))
-       || chooser_entry->current_folder_file == folder_file)
-      && g_strcmp0 (dir_part, chooser_entry->dir_part) == 0)
+	&& g_file_equal (folder_file, _gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file))
+       || _gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file == folder_file)
+      && g_strcmp0 (dir_part, _gtk_file_chooser_entry_get_props(chooser_entry)->dir_part) == 0)
     {
       return;
     }
 
-  if (chooser_entry->current_folder_file)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file)
     {
-      g_object_unref (chooser_entry->current_folder_file);
-      chooser_entry->current_folder_file = NULL;
+      g_object_unref (_gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file);
+      _gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file = NULL;
     }
 
-  g_free (chooser_entry->dir_part);
-  chooser_entry->dir_part = g_strdup (dir_part);
+  g_free (_gtk_file_chooser_entry_get_props(chooser_entry)->dir_part);
+  _gtk_file_chooser_entry_get_props(chooser_entry)->dir_part = g_strdup (dir_part);
   
-  chooser_entry->current_folder_loaded = FALSE;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_loaded = FALSE;
 
   discard_completion_store (chooser_entry);
 
   if (folder_file)
     {
-      chooser_entry->current_folder_file = g_object_ref (folder_file);
+      _gtk_file_chooser_entry_get_props(chooser_entry)->current_folder_file = g_object_ref (folder_file);
       populate_completion_store (chooser_entry);
     }
 }
@@ -624,7 +624,7 @@ refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry)
   char *text, *last_slash, *old_file_part;
   char *dir_part;
 
-  old_file_part = chooser_entry->file_part;
+  old_file_part = _gtk_file_chooser_entry_get_props(chooser_entry)->file_part;
 
   text = gtk_file_chooser_entry_get_completion_text (chooser_entry);
 
@@ -632,12 +632,12 @@ refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry)
   if (last_slash)
     {
       dir_part = g_strndup (text, last_slash - text + 1);
-      chooser_entry->file_part = g_strdup (last_slash + 1);
+      _gtk_file_chooser_entry_get_props(chooser_entry)->file_part = g_strdup (last_slash + 1);
     }
   else
     {
       dir_part = g_strdup ("");
-      chooser_entry->file_part = g_strdup (text);
+      _gtk_file_chooser_entry_get_props(chooser_entry)->file_part = g_strdup (text);
     }
 
   folder_file = gtk_file_chooser_get_directory_for_text (chooser_entry, text);
@@ -649,19 +649,19 @@ refresh_current_folder_and_file_part (GtkFileChooserEntry *chooser_entry)
 
   g_free (dir_part);
 
-  if (chooser_entry->completion_store &&
-      (g_strcmp0 (old_file_part, chooser_entry->file_part) != 0))
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store &&
+      (g_strcmp0 (old_file_part, _gtk_file_chooser_entry_get_props(chooser_entry)->file_part) != 0))
     {
       GtkFileFilter *filter;
       char *pattern;
 
       filter = __gtk_file_filter_new ();
-      pattern = g_strconcat (chooser_entry->file_part, "*", NULL);
+      pattern = g_strconcat (_gtk_file_chooser_entry_get_props(chooser_entry)->file_part, "*", NULL);
       __gtk_file_filter_add_pattern (filter, pattern);
 
       g_object_ref_sink (filter);
 
-      _gtk_file_system_model_set_filter (GTK_FILE_SYSTEM_MODEL (chooser_entry->completion_store),
+      _gtk_file_system_model_set_filter (GTK_FILE_SYSTEM_MODEL (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
                                          filter);
 
       g_free (pattern);
@@ -753,7 +753,7 @@ _gtk_file_chooser_entry_new (gboolean       eat_tabs)
   GtkFileChooserEntry *chooser_entry;
 
   chooser_entry = g_object_new (GTK_TYPE_FILE_CHOOSER_ENTRY, NULL);
-  chooser_entry->eat_tabs = (eat_tabs != FALSE);
+  _gtk_file_chooser_entry_get_props(chooser_entry)->eat_tabs = (eat_tabs != FALSE);
 
   return GTK_WIDGET (chooser_entry);
 }
@@ -772,18 +772,18 @@ _gtk_file_chooser_entry_set_base_folder (GtkFileChooserEntry *chooser_entry,
   g_return_if_fail (GTK_IS_FILE_CHOOSER_ENTRY (chooser_entry));
   g_return_if_fail (file == NULL || G_IS_FILE (file));
 
-  if (chooser_entry->base_folder == file ||
-      (file != NULL && chooser_entry->base_folder != NULL 
-       && g_file_equal (chooser_entry->base_folder, file)))
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder == file ||
+      (file != NULL && _gtk_file_chooser_entry_get_props(chooser_entry)->base_folder != NULL 
+       && g_file_equal (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder, file)))
     return;
 
   if (file)
     g_object_ref (file);
 
-  if (chooser_entry->base_folder)
-    g_object_unref (chooser_entry->base_folder);
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder)
+    g_object_unref (_gtk_file_chooser_entry_get_props(chooser_entry)->base_folder);
 
-  chooser_entry->base_folder = file;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->base_folder = file;
 
   refresh_current_folder_and_file_part (chooser_entry);
 }
@@ -855,11 +855,11 @@ _gtk_file_chooser_entry_set_action (GtkFileChooserEntry *chooser_entry,
 {
   g_return_if_fail (GTK_IS_FILE_CHOOSER_ENTRY (chooser_entry));
   
-  if (chooser_entry->action != action)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->action != action)
     {
       GtkEntryCompletion *comp;
 
-      chooser_entry->action = action;
+      _gtk_file_chooser_entry_get_props(chooser_entry)->action = action;
 
       comp = __gtk_entry_get_completion (GTK_ENTRY (chooser_entry));
 
@@ -877,8 +877,8 @@ _gtk_file_chooser_entry_set_action (GtkFileChooserEntry *chooser_entry,
 	  break;
 	}
 
-      if (chooser_entry->completion_store)
-        _gtk_file_system_model_set_show_files (GTK_FILE_SYSTEM_MODEL (chooser_entry->completion_store),
+      if (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store)
+        _gtk_file_system_model_set_show_files (GTK_FILE_SYSTEM_MODEL (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
                                                action == GTK_FILE_CHOOSER_ACTION_OPEN ||
                                                action == GTK_FILE_CHOOSER_ACTION_SAVE);
 
@@ -901,7 +901,7 @@ _gtk_file_chooser_entry_get_action (GtkFileChooserEntry *chooser_entry)
   g_return_val_if_fail (GTK_IS_FILE_CHOOSER_ENTRY (chooser_entry),
 			GTK_FILE_CHOOSER_ACTION_OPEN);
   
-  return chooser_entry->action;
+  return _gtk_file_chooser_entry_get_props(chooser_entry)->action;
 }
 
 gboolean
@@ -911,13 +911,13 @@ _gtk_file_chooser_entry_get_is_folder (GtkFileChooserEntry *chooser_entry,
   GtkTreeIter iter;
   GFileInfo *info;
 
-  if (chooser_entry->completion_store == NULL ||
-      !_gtk_file_system_model_get_iter_for_file (GTK_FILE_SYSTEM_MODEL (chooser_entry->completion_store),
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store == NULL ||
+      !_gtk_file_system_model_get_iter_for_file (GTK_FILE_SYSTEM_MODEL (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
                                                  &iter,
                                                  file))
     return FALSE;
 
-  info = _gtk_file_system_model_get_info (GTK_FILE_SYSTEM_MODEL (chooser_entry->completion_store),
+  info = _gtk_file_system_model_get_info (GTK_FILE_SYSTEM_MODEL (_gtk_file_chooser_entry_get_props(chooser_entry)->completion_store),
                                           &iter);
 
   return _gtk_file_info_consider_as_directory (info);
@@ -936,7 +936,7 @@ _gtk_file_chooser_entry_select_filename (GtkFileChooserEntry *chooser_entry)
   const gchar *str, *ext;
   glong len = -1;
 
-  if (chooser_entry->action == GTK_FILE_CHOOSER_ACTION_SAVE)
+  if (_gtk_file_chooser_entry_get_props(chooser_entry)->action == GTK_FILE_CHOOSER_ACTION_SAVE)
     {
       str = __gtk_entry_get_text (GTK_ENTRY (chooser_entry));
       ext = g_strrstr (str, ".");
@@ -952,12 +952,12 @@ void
 _gtk_file_chooser_entry_set_local_only (GtkFileChooserEntry *chooser_entry,
                                         gboolean             local_only)
 {
-  chooser_entry->local_only = local_only;
+  _gtk_file_chooser_entry_get_props(chooser_entry)->local_only = local_only;
   refresh_current_folder_and_file_part (chooser_entry);
 }
 
 gboolean
 _gtk_file_chooser_entry_get_local_only (GtkFileChooserEntry *chooser_entry)
 {
-  return chooser_entry->local_only;
+  return _gtk_file_chooser_entry_get_props(chooser_entry)->local_only;
 }

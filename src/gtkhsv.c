@@ -79,7 +79,6 @@ typedef struct {
   
 } HSVPrivate;
 
-
 
 /* Signal IDs */
 
@@ -114,8 +113,7 @@ static void     gtk_hsv_move           (GtkHSV           *hsv,
 
 static guint hsv_signals[LAST_SIGNAL];
 
-STLWRT_DEFINE_FTYPE_VPARENT (GtkHSV, gtk_hsv, GTK_TYPE_WIDGET, G_TYPE_FLAG_NONE,
-                             G_ADD_PRIVATE (GtkHSV))
+STLWRT_DEFINE_FTYPE_VPARENT (GtkHSV, gtk_hsv, GTK_TYPE_WIDGET, G_TYPE_FLAG_NONE, ;)
 
 /* Class initialization function for the HSV color selector */
 static void
@@ -125,8 +123,8 @@ gtk_hsv_class_init (GtkHSVClass *hsv_class)
   GtkWidgetClass *widget_class;
   GtkBindingSet  *binding_set;
 
-  object_class = (GObjectClass *) class;
-  widget_class = (GtkWidgetClass *) class;
+  object_class = (GObjectClass *) hsv_class;
+  widget_class = (GtkWidgetClass *) hsv_class;
 
   widget_class->map = gtk_hsv_map;
   widget_class->unmap = gtk_hsv_unmap;
@@ -162,7 +160,7 @@ gtk_hsv_class_init (GtkHSVClass *hsv_class)
 		  G_TYPE_NONE, 1,
 		  GTK_TYPE_DIRECTION_TYPE);
 
-  binding_set = __gtk_binding_set_by_class (class);
+  binding_set = __gtk_binding_set_by_class (hsv_class);
 
   __gtk_binding_entry_add_signal (binding_set, GDK_Up, 0,
                                 "move", 1,

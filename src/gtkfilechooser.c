@@ -2149,55 +2149,6 @@ __gtk_file_chooser_get_preview_file (GtkFileChooser *chooser)
   return GTK_FILE_CHOOSER_GET_IFACE (chooser)->get_preview_file (chooser);
 }
 
-/**
- * __gtk_file_chooser_add_shortcut_folder:
- * @chooser: a #GtkFileChooser
- * @file: file for the folder to add
- * @error: (allow-none): location to store error, or %NULL
- * 
- * Adds a folder to be displayed with the shortcut folders in a file chooser.
- * Internal function, see __gtk_file_chooser_add_shortcut_folder().
- * 
- * Return value: %TRUE if the folder could be added successfully, %FALSE
- * otherwise.
- *
- * Since: 2.4
- **/
-gboolean
-__gtk_file_chooser_add_shortcut_folder (GtkFileChooser  *chooser,
-				       GFile           *file,
-				       GError         **error)
-{
-  g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), FALSE);
-  g_return_val_if_fail (G_IS_FILE (file), FALSE);
-
-  return GTK_FILE_CHOOSER_GET_IFACE (chooser)->add_shortcut_folder (chooser, file, error);
-}
-
-/**
- * __gtk_file_chooser_remove_shortcut_folder:
- * @chooser: a #GtkFileChooser
- * @file: file for the folder to remove
- * @error: (allow-none): location to store error, or %NULL
- * 
- * Removes a folder from the shortcut folders in a file chooser.  Internal
- * function, see __gtk_file_chooser_remove_shortcut_folder().
- * 
- * Return value: %TRUE if the folder could be removed successfully, %FALSE
- * otherwise.
- *
- * Since: 2.4
- **/
-gboolean
-__gtk_file_chooser_remove_shortcut_folder (GtkFileChooser  *chooser,
-					  GFile           *file,
-					  GError         **error)
-{
-  g_return_val_if_fail (GTK_IS_FILE_CHOOSER (chooser), FALSE);
-  g_return_val_if_fail (G_IS_FILE (file), FALSE);
-
-  return GTK_FILE_CHOOSER_GET_IFACE (chooser)->remove_shortcut_folder (chooser, file, error);
-}
 
 /**
  * __gtk_file_chooser_get_preview_filename:

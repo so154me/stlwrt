@@ -1349,14 +1349,13 @@ gtk_real_menu_item_select (GtkMenuItem *menu_item)
 {
   gboolean touchscreen_mode;
 
-  g_object_get (__gtk_widget_get_settings (GTK_WIDGET (item)),
+  g_object_get (__gtk_widget_get_settings (GTK_WIDGET (menu_item)),
                 "gtk-touchscreen-mode", &touchscreen_mode,
                 NULL);
 
   if (!touchscreen_mode &&
       gtk_menu_item_get_props (menu_item)->submenu &&
-      (!__gtk_widget_get_mapped (gtk_menu_item_get_props (menu_item)->submenu) ||
-       GTK_MENU (gtk_menu_item_get_props (menu_item)->submenu)->tearoff_active))
+      (!__gtk_widget_get_mapped (gtk_menu_item_get_props (menu_item)->submenu) || GTK_MENU(gtk_menu_get_props(gtk_menu_item_get_props(menu_item)->submenu)->tearoff_active)))
     {
       ___gtk_menu_item_popup_submenu (GTK_WIDGET (menu_item), TRUE);
     }

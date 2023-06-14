@@ -866,7 +866,7 @@ ___gtk_menu_shell_update_mnemonics (GtkMenuShell *menu_shell)
       if (gtk_menu_shell_get_props (target)->active_menu_item || priv->in_unselectable_item)
         found = TRUE;
 
-      gtk_menu_shell_get_props (target) = GTK_MENU_SHELL (gtk_menu_shell_get_props (target)->parent_menu_shell);
+      target = GTK_MENU_SHELL (gtk_menu_shell_get_props (target)->parent_menu_shell);
     }
 }
 
@@ -1149,7 +1149,7 @@ gtk_menu_shell_get_item (GtkMenuShell *menu_shell,
   menu_item = __gtk_get_event_widget ((GdkEvent*) event);
   
   while (menu_item && !GTK_IS_MENU_ITEM (menu_item))
-    gtk_widget_get_props (menu_item) = gtk_widget_get_props (menu_item)->parent;
+    menu_item = gtk_widget_get_props (menu_item)->parent;
 
   if (menu_item && gtk_menu_shell_is_item (menu_shell, menu_item))
     return menu_item;
@@ -1259,7 +1259,7 @@ __gtk_menu_shell_activate_item (GtkMenuShell      *menu_shell,
 	{
 	  g_object_ref (parent_menu_shell);
 	  shells = g_slist_prepend (shells, parent_menu_shell);
-	  gtk_menu_shell_get_props (parent_menu_shell) = (GtkMenuShell*) gtk_menu_shell_get_props (gtk_menu_shell_get_props (parent_menu_shell)->parent_menu_shell);
+	  parent_menu_shell = (GtkMenuShell*) gtk_menu_shell_get_props (gtk_menu_shell_get_props (parent_menu_shell)->parent_menu_shell);
 	}
       while (parent_menu_shell);
       shells = g_slist_reverse (shells);
@@ -1533,7 +1533,7 @@ gtk_real_menu_shell_move_current (GtkMenuShell         *menu_shell,
 	     (GTK_MENU_SHELL_GET_CLASS (parent_menu_shell)->submenu_placement ==
 	      GTK_MENU_SHELL_GET_CLASS (menu_shell)->submenu_placement))
 	{
-	  gtk_menu_shell_get_props (parent_menu_shell) = GTK_MENU_SHELL (gtk_menu_shell_get_props (gtk_menu_shell_get_props (parent_menu_shell)->parent_menu_shell));
+	  parent_menu_shell = GTK_MENU_SHELL (gtk_menu_shell_get_props (gtk_menu_shell_get_props (parent_menu_shell)->parent_menu_shell));
 	}
 
       if (parent_menu_shell)
@@ -1599,7 +1599,7 @@ gtk_real_menu_shell_cycle_focus (GtkMenuShell      *menu_shell,
   while (menu_shell && !GTK_IS_MENU_BAR (menu_shell))
     {
       if (gtk_menu_shell_get_props (menu_shell)->parent_menu_shell)
-	gtk_menu_shell_get_props (menu_shell) = GTK_MENU_SHELL (gtk_menu_shell_get_props (menu_shell)->parent_menu_shell);
+	menu_shell = GTK_MENU_SHELL (gtk_menu_shell_get_props (menu_shell)->parent_menu_shell);
       else
 	menu_shell = NULL;
     }

@@ -131,5 +131,6 @@ gtk_icon_factory_class_init (GtkIconFactoryClass *klass)
   object_class->finalize = gtk_icon_factory_finalize;
 }
 
-static void
-gtk_icon_factory_buildable_init
+// IMPLEMENT THIS!
+// static void
+// gtk_icon_factory_buildable_init

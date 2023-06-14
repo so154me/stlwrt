@@ -552,7 +552,7 @@ get_viewable_menu_bars (GtkWindow *window)
 	  if (!__gtk_widget_get_mapped (widget))
 	    viewable = FALSE;
 	  
-	  gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+	  widget = gtk_widget_get_props (widget)->parent;
 	}
 
       if (viewable)

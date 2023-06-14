@@ -109,8 +109,7 @@ static void   gtk_mount_operation_show_processes (GMountOperation *op,
 static void   gtk_mount_operation_aborted      (GMountOperation *op);
 
 STLWRT_DEFINE_FTYPE (GtkMountOperation, gtk_mount_operation, G_TYPE_MOUNT_OPERATION,
-                     G_TYPE_FLAG_NONE,
-                     G_ADD_PRIVATE (GtkMountOperation))
+                     G_TYPE_FLAG_NONE, ;)
 
 enum {
   PROP_0,

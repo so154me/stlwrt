@@ -101,7 +101,7 @@ gtk_radio_button_class_init (GtkRadioButtonClass *class)
    * Since: 2.4
    */
   group_changed_signal = g_signal_new (I_("group-changed"),
-				       G_OBJECT_CLASS_TYPE (object_class),
+				       G_OBJECT_CLASS_TYPE (gobject_class),
 				       G_SIGNAL_RUN_FIRST,
 				       G_STRUCT_OFFSET (GtkRadioButtonClass, group_changed),
 				       NULL, NULL,
