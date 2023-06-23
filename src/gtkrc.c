@@ -399,7 +399,8 @@ gtk_rc_make_default_dir (const gchar *type)
   if (var)
     path = g_build_filename (var, "lib", "stlwrt", type, NULL);
   else
-    path = g_build_filename (STLWRT_LIBDIR, "stlwrt", type, NULL);
+	// FIX ME
+    //path = g_build_filename (STLWRT_LIBDIR, "stlwrt", type, NULL);
 
   return path;
 }
@@ -465,7 +466,8 @@ __gtk_rc_get_theme_dir (void)
   if (var)
     path = g_build_filename (var, "share", "themes", NULL);
   else
-    path = g_build_filename (STLWRT_DATA_PREFIX, "share", "themes", NULL);
+  	// FIX ME
+    //path = g_build_filename (STLWRT_DATA_PREFIX, "share", "themes", NULL);
 
   return path;
 }
@@ -523,9 +525,10 @@ gtk_rc_add_initial_default_files (void)
       const gchar * const *config_dirs;
       const gchar *config_dir;
 
-      str = g_build_filename (STLWRT_DATA_PREFIX, "share", "gtk-2.0", "gtkrc", NULL);
-      __gtk_rc_add_default_file (str);
-      g_free (str);
+	  // FIX ME
+      //str = g_build_filename (STLWRT_DATA_PREFIX, "share", "gtk-2.0", "gtkrc", NULL);
+      //__gtk_rc_add_default_file (str);
+      //g_free (str);
 
       config_dirs = g_get_system_config_dirs ();
       for (config_dir = *config_dirs; *config_dirs != NULL; config_dirs++)
@@ -534,10 +537,10 @@ gtk_rc_add_initial_default_files (void)
           __gtk_rc_add_default_file (str);
           g_free (str);
         }
-
-      str = g_build_filename (STLWRT_SYSCONFDIR, "gtk-2.0", "gtkrc", NULL);
-      __gtk_rc_add_default_file (str);
-      g_free (str);
+	  // FIX ME
+      //str = g_build_filename (STLWRT_SYSCONFDIR, "gtk-2.0", "gtkrc", NULL);
+      //gtk_rc_add_default_file (str);
+      //g_free (str);
 
       home = g_get_home_dir ();
       if (home)

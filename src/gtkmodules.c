@@ -97,8 +97,9 @@ get_module_path (void)
   }
   else
   {
-    default_dir_gtk2 = g_build_filename (STLWRT_LIBDIR, "gtk-2.0", NULL);
-    default_dir_gtk3 = g_build_filename (STLWRT_LIBDIR, "gtk-3.0", NULL);
+	// FIX ME: Actually implement a buildsystem.
+    //default_dir_gtk2 = g_build_filename (STLWRT_LIBDIR, "gtk-2.0", NULL);
+	//default_dir_gtk3 = g_build_filename (STLWRT_LIBDIR, "gtk-3.0", NULL);
   }
 
   if (module_path_env && home_gtk_dir_gtk2)

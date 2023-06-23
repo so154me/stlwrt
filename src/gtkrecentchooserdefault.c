@@ -90,7 +90,7 @@ enum
 
 struct _GtkRecentChooserDefault
 {
-  GtkVBox parent_instance;
+  //GtkVBox parent_instance;
   
   GtkRecentManager *manager;
   gulong manager_changed_id;
@@ -168,7 +168,7 @@ enum {
 #define NUM_CHARS 40
 #define NUM_LINES 9
 
-
+
 
 /* GObject */
 static void     _gtk_recent_chooser_default_class_init  (GtkRecentChooserDefaultClass *klass);

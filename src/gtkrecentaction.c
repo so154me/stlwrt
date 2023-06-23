@@ -167,10 +167,8 @@ gtk_recent_action_get_items (GtkRecentChooser *chooser)
   GtkRecentAction *action = GTK_RECENT_ACTION (chooser);
   GtkRecentActionPrivate *priv = action->priv;
 
-  return __gtk_recent_chooser_get_items (chooser,
-                                        priv->current_filter,
-                                        priv->sort_func,
-                                        priv->sort_data);
+  // FIX ME: this probably isnt right either, but who cares?
+  return __gtk_recent_chooser_get_items (chooser);
 }
 
 static GtkRecentManager *

@@ -25,6 +25,7 @@
 
 #include <string.h>
 
+#include <gtkprogress.h>
 #include <gtkprogressbar.h>
 #include <gtkprivate.h>
 #include <gtkintl.h>
@@ -82,7 +83,7 @@ static void __gtk_progress_bar_set_activity_blocks_internal (GtkProgressBar *pba
 							   guint           blocks);
 
 
-STLWRT_DEFINE_VTYPE (GtkProgressBar, gtk_progress_bar, GTK_TYPE_WIDGET, G_TYPE_FLAG_NONE, ;)
+STLWRT_DEFINE_VTYPE(GtkProgressBar, gtk_progress_bar, GTK_TYPE_WIDGET, G_TYPE_FLAG_NONE, ;)
 
 static void
 gtk_progress_bar_class_init (GtkProgressBarClass *class)
@@ -298,7 +299,7 @@ gtk_progress_bar_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_ADJUSTMENT:
-      gtk_progress_set_adjustment (GTK_PROGRESS (pbar),
+      __gtk_progress_set_adjustment (GTK_PROGRESS (pbar),
 				   GTK_ADJUSTMENT (g_value_get_object (value)));
       break;
     case PROP_ORIENTATION:
@@ -347,7 +348,7 @@ gtk_progress_bar_get_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_ADJUSTMENT:
-      g_value_set_object (value, GTK_PROGRESS (pbar)->adjustment);
+      g_value_set_object (value, gtk_progress_get_props(GTK_PROGRESS (pbar))->adjustment);
       break;
     case PROP_ORIENTATION:
       g_value_set_enum (value, gtk_progress_bar_get_props (pbar)->orientation);
@@ -365,7 +366,7 @@ gtk_progress_bar_get_property (GObject      *object,
       g_value_set_uint (value, gtk_progress_bar_get_props (pbar)->blocks);
       break;
     case PROP_FRACTION:
-      g_value_set_double (value, gtk_progress_get_current_percentage (GTK_PROGRESS (pbar)));
+      g_value_set_double (value, __gtk_progress_get_current_percentage (GTK_PROGRESS (pbar)));
       break;
     case PROP_PULSE_STEP:
       g_value_set_double (value, gtk_progress_bar_get_props (pbar)->pulse_fraction);
@@ -433,9 +434,9 @@ gtk_progress_bar_real_update (GtkProgress *progress)
   widget = GTK_WIDGET (progress);
  
   if (gtk_progress_bar_get_props (pbar)->bar_style == GTK_PROGRESS_CONTINUOUS ||
-      GTK_PROGRESS (pbar)->activity_mode)
+      gtk_progress_get_props(GTK_PROGRESS (pbar))->activity_mode)
     {
-      if (GTK_PROGRESS (pbar)->activity_mode)
+      if (gtk_progress_get_props(GTK_PROGRESS (pbar))->activity_mode)
 	{
 	  guint size;
           
@@ -510,7 +511,7 @@ gtk_progress_bar_real_update (GtkProgress *progress)
     {
       gint in_block;
       
-      in_block = -1 + (gint)(gtk_progress_get_current_percentage (progress) *
+      in_block = -1 + (gint)(__gtk_progress_get_current_percentage (progress) *
 			     (gdouble)gtk_progress_bar_get_props (pbar)->blocks);
       
       if (gtk_progress_bar_get_props (pbar)->in_block != in_block)
@@ -565,12 +566,12 @@ gtk_progress_bar_size_request (GtkWidget      *widget,
   width = 2 * gtk_widget_get_props (widget)->style->xthickness + xspacing;
   height = 2 * gtk_widget_get_props (widget)->style->ythickness + yspacing;
 
-  if (progress->show_text && gtk_progress_bar_get_props (pbar)->bar_style != GTK_PROGRESS_DISCRETE)
+  if (gtk_progress_get_props(progress)->show_text && gtk_progress_bar_get_props (pbar)->bar_style != GTK_PROGRESS_DISCRETE)
     {
-      if (!progress->adjustment)
-	gtk_progress_set_adjustment (progress, NULL);
+      if (!gtk_progress_get_props(progress)->adjustment)
+	  __gtk_progress_set_adjustment (progress, NULL);
 
-      buf = gtk_progress_get_text_from_value (progress, gtk_adjustment_get_props (progress->adjustment)->upper);
+      buf = __gtk_progress_get_text_from_value (progress, gtk_adjustment_get_props (gtk_progress_get_props(progress)->adjustment)->upper);
 
       layout = __gtk_widget_create_pango_layout (widget, buf);
 
@@ -735,7 +736,7 @@ gtk_progress_bar_paint_activity (GtkProgressBar            *pbar,
     }
 
   __gtk_paint_box (gtk_widget_get_props (widget)->style,
-		 progress->offscreen_pixmap,
+		 gtk_progress_get_props(progress)->offscreen_pixmap,
 		 GTK_STATE_PRELIGHT, GTK_SHADOW_OUT,
 		 &area, widget, "bar",
 		 area.x, area.y, area.width, area.height);
@@ -782,7 +783,7 @@ gtk_progress_bar_paint_continuous (GtkProgressBar            *pbar,
     }
   
   __gtk_paint_box (gtk_widget_get_props (widget)->style,
-		 GTK_PROGRESS (pbar)->offscreen_pixmap,
+		 gtk_progress_get_props(GTK_PROGRESS (pbar))->offscreen_pixmap,
 		 GTK_STATE_PRELIGHT, GTK_SHADOW_OUT,
 		 &area, widget, "bar",
 		 area.x, area.y, area.width, area.height);
@@ -834,7 +835,7 @@ gtk_progress_bar_paint_discrete (GtkProgressBar            *pbar,
 	}
       
       __gtk_paint_box (gtk_widget_get_props (widget)->style,
-		     GTK_PROGRESS (pbar)->offscreen_pixmap,
+		     gtk_progress_get_props(GTK_PROGRESS (pbar))->offscreen_pixmap,
 		     GTK_STATE_PRELIGHT, GTK_SHADOW_OUT,
 		     &area, widget, "bar",
 		     area.x, area.y, area.width, area.height);
@@ -856,13 +857,13 @@ gtk_progress_bar_paint_text (GtkProgressBar            *pbar,
   PangoLayout *layout;
   PangoRectangle logical_rect;
   GdkRectangle prelight_clip, start_clip, end_clip;
-  gfloat text_xalign = progress->x_align;
-  gfloat text_yalign = progress->y_align;
+  gfloat text_xalign = gtk_progress_get_props(progress)->x_align;
+  gfloat text_yalign = gtk_progress_get_props(progress)->y_align;
 
   if (__gtk_widget_get_direction (widget) != GTK_TEXT_DIR_LTR)
     text_xalign = 1.0 - text_xalign;
 
-  buf = gtk_progress_get_current_text (progress);
+  buf = __gtk_progress_get_current_text (progress);
   
   layout = __gtk_widget_create_pango_layout (widget, buf);
   pango_layout_set_ellipsize (layout, gtk_progress_bar_get_props (pbar)->ellipsize);
@@ -931,7 +932,7 @@ gtk_progress_bar_paint_text (GtkProgressBar            *pbar,
 
   if (start_clip.width > 0 && start_clip.height > 0)
     __gtk_paint_layout (gtk_widget_get_props (widget)->style,
-		      progress->offscreen_pixmap,
+		      gtk_progress_get_props(progress)->offscreen_pixmap,
 		      GTK_STATE_NORMAL,
 		      FALSE,
 		      &start_clip,
@@ -942,7 +943,7 @@ gtk_progress_bar_paint_text (GtkProgressBar            *pbar,
 
   if (end_clip.width > 0 && end_clip.height > 0)
     __gtk_paint_layout (gtk_widget_get_props (widget)->style,
-		      progress->offscreen_pixmap,
+		      gtk_progress_get_props(progress)->offscreen_pixmap,
 		      GTK_STATE_NORMAL,
 		      FALSE,
 		      &end_clip,
@@ -952,7 +953,7 @@ gtk_progress_bar_paint_text (GtkProgressBar            *pbar,
 		      layout);
 
   __gtk_paint_layout (gtk_widget_get_props (widget)->style,
-		    progress->offscreen_pixmap,
+		    gtk_progress_get_props(progress)->offscreen_pixmap,
 		    GTK_STATE_PRELIGHT,
 		    FALSE,
 		    &prelight_clip,
@@ -987,21 +988,21 @@ gtk_progress_bar_paint (GtkProgress *progress)
 	orientation = GTK_PROGRESS_LEFT_TO_RIGHT;
     }
  
-  if (progress->offscreen_pixmap)
+  if (gtk_progress_get_props(progress)->offscreen_pixmap)
     {
       __gtk_paint_box (gtk_widget_get_props (widget)->style,
-		     progress->offscreen_pixmap,
+		     gtk_progress_get_props(progress)->offscreen_pixmap,
 		     GTK_STATE_NORMAL, GTK_SHADOW_IN, 
 		     NULL, widget, "trough",
 		     0, 0,
 		     gtk_widget_get_props (widget)->allocation.width,
 		     gtk_widget_get_props (widget)->allocation.height);
       
-      if (progress->activity_mode)
+      if (gtk_progress_get_props(progress)->activity_mode)
 	{
 	  gtk_progress_bar_paint_activity (pbar, orientation);
 
-	  if (GTK_PROGRESS (pbar)->show_text)
+	  if (gtk_progress_get_props(GTK_PROGRESS (pbar))->show_text)
 	    {
 	      gint offset;
 	      gint amount;
@@ -1022,13 +1023,13 @@ gtk_progress_bar_paint (GtkProgress *progress)
 	    space = gtk_widget_get_props (widget)->allocation.height - 2 * gtk_widget_get_props (widget)->style->ythickness;
 	  
 	  amount = space *
-	    gtk_progress_get_current_percentage (GTK_PROGRESS (pbar));
+	    __gtk_progress_get_current_percentage (GTK_PROGRESS (pbar));
 	  
 	  if (gtk_progress_bar_get_props (pbar)->bar_style == GTK_PROGRESS_CONTINUOUS)
 	    {
 	      gtk_progress_bar_paint_continuous (pbar, amount, orientation);
 
-	      if (GTK_PROGRESS (pbar)->show_text)
+	      if (gtk_progress_get_props(GTK_PROGRESS (pbar))->show_text)
 		gtk_progress_bar_paint_text (pbar, -1, amount, orientation);
 	    }
 	  else
@@ -1120,13 +1121,13 @@ __gtk_progress_bar_set_fraction (GtkProgressBar *pbar,
   g_return_if_fail (GTK_IS_PROGRESS_BAR (pbar));
 
   /* If we know the percentage, we don't want activity mode. */
-  gtk_progress_set_activity_mode (GTK_PROGRESS (pbar), FALSE);
+  __gtk_progress_set_activity_mode (GTK_PROGRESS (pbar), FALSE);
   
   /* We use the deprecated GtkProgress interface internally.
    * Once everything's been deprecated for a good long time,
    * we can clean up all this code.
    */
-  gtk_progress_set_percentage (GTK_PROGRESS (pbar), fraction);
+  __gtk_progress_set_percentage (GTK_PROGRESS (pbar), fraction);
 
   g_object_notify (G_OBJECT (pbar), "fraction");
 }
@@ -1147,7 +1148,7 @@ __gtk_progress_bar_pulse (GtkProgressBar *pbar)
   g_return_if_fail (GTK_IS_PROGRESS_BAR (pbar));
 
   /* If we don't know the percentage, we must want activity mode. */
-  gtk_progress_set_activity_mode (GTK_PROGRESS (pbar), TRUE);
+  __gtk_progress_set_activity_mode (GTK_PROGRESS (pbar), TRUE);
 
   /* Sigh. */
   gtk_progress_bar_real_update (GTK_PROGRESS (pbar));
@@ -1166,14 +1167,14 @@ __gtk_progress_bar_set_text (GtkProgressBar *pbar,
 {
   g_return_if_fail (GTK_IS_PROGRESS_BAR (pbar));
   
-  gtk_progress_set_show_text (GTK_PROGRESS (pbar), text && *text);
-  gtk_progress_set_format_string (GTK_PROGRESS (pbar), text);
+  __gtk_progress_set_show_text (GTK_PROGRESS (pbar), text && *text);
+  __gtk_progress_set_format_string (GTK_PROGRESS (pbar), text);
   
   /* We don't support formats in this interface, but turn
    * them back on for NULL, which should put us back to
    * the initial state.
    */
-  GTK_PROGRESS (pbar)->use_text_format = (text == NULL);
+  gtk_progress_get_props(GTK_PROGRESS (pbar))->use_text_format = (text == NULL);
   
   g_object_notify (G_OBJECT (pbar), "text");
 }
@@ -1207,7 +1208,7 @@ __gtk_progress_bar_update (GtkProgressBar *pbar,
    * Use gtk_progress_bar_set_percentage ()
    */   
 
-  gtk_progress_set_percentage (GTK_PROGRESS (pbar), percentage);
+  __gtk_progress_set_percentage (GTK_PROGRESS (pbar), percentage);
 }
 
 /**
@@ -1252,10 +1253,10 @@ __gtk_progress_bar_get_text (GtkProgressBar *pbar)
 {
   g_return_val_if_fail (GTK_IS_PROGRESS_BAR (pbar), NULL);
 
-  if (GTK_PROGRESS (pbar)->use_text_format)
+  if (gtk_progress_get_props(GTK_PROGRESS (pbar))->use_text_format)
     return NULL;
   else
-    return GTK_PROGRESS (pbar)->format;
+    return gtk_progress_get_props(GTK_PROGRESS (pbar))->format;
 }
 
 /**
@@ -1271,7 +1272,7 @@ __gtk_progress_bar_get_fraction (GtkProgressBar *pbar)
 {
   g_return_val_if_fail (GTK_IS_PROGRESS_BAR (pbar), 0);
 
-  return gtk_progress_get_current_percentage (GTK_PROGRESS (pbar));
+  return __gtk_progress_get_current_percentage (GTK_PROGRESS (pbar));
 }
 
 /**

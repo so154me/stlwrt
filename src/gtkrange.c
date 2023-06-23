@@ -226,10 +226,8 @@ static void          gtk_range_update_value             (GtkRange      *range);
 static gboolean      gtk_range_key_press                (GtkWidget     *range,
 							 GdkEventKey   *event);
 
-
-STLWRT_DEFINE_VTYPE (GtkRange, gtk_range, GTK_TYPE_WIDGET, G_TYPE_FLAG_NONE,
-                     G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL)
-                     G_ADD_PRIVATE (GtkRange))
+// FIX ME: this probably isnt the right thing to do.
+STLWRT_DEFINE_VTYPE (GtkRange, gtk_range, GTK_TYPE_WIDGET, G_TYPE_FLAG_NONE, G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL) ;)
 
 static guint signals[LAST_SIGNAL];
 
@@ -1770,8 +1768,8 @@ draw_stepper (GtkRange     *range,
     {
       gint arrow_displacement_x;
       gint arrow_displacement_y;
-
-      gtk_range_get_props (GTK_RANGE (widget),
+	
+      range_get_properties(GTK_RANGE (widget),
                            NULL, NULL, NULL, NULL, NULL, NULL,
 			   &arrow_displacement_x, &arrow_displacement_y);
       
@@ -3621,7 +3619,7 @@ gtk_range_calc_layout (GtkRange *range,
         
 	if (gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->upper - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->lower - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->page_size != 0)
           x += (right - left - width) * ((adjustment_value - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->lower) /
-                                         (gtk_adjustment_get_props (gtk_range_get_props (range))->adjustment)->upper - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->lower - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->page_size));
+                                         (gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->upper - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->lower - gtk_adjustment_get_props (gtk_range_get_props (range)->adjustment)->page_size));
         
         x = CLAMP (x, left, right);
         
