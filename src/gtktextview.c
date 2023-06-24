@@ -1020,7 +1020,7 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    */
   signals[SELECT_ALL] =
     g_signal_new_class_handler (I_("select-all"),
-                                G_OBJECT_CLASS_TYPE (object_class),
+                                G_OBJECT_CLASS_TYPE (gobject_class),
                                 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                 G_CALLBACK (gtk_text_view_select_all),
                                 NULL, NULL,
@@ -1039,7 +1039,7 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    */ 
   signals[TOGGLE_CURSOR_VISIBLE] =
     g_signal_new_class_handler (I_("toggle-cursor-visible"),
-                                G_OBJECT_CLASS_TYPE (object_class),
+                                G_OBJECT_CLASS_TYPE (gobject_class),
                                 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                 G_CALLBACK (gtk_text_view_toggle_cursor_visible),
                                 NULL, NULL,
@@ -1062,7 +1062,7 @@ gtk_text_view_class_init (GtkTextViewClass *klass)
    */
   signals[PREEDIT_CHANGED] =
     g_signal_new_class_handler (I_("preedit-changed"),
-                                G_OBJECT_CLASS_TYPE (object_class),
+                                G_OBJECT_CLASS_TYPE (gobject_class),
                                 G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                                 NULL,
                                 NULL, NULL,

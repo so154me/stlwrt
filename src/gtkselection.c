@@ -3124,11 +3124,12 @@ __gtk_selection_data_free (GtkSelectionData *data)
   g_slice_free (GtkSelectionData, data);
 }
 
-STLWRT_DEFINE_BOXED_TYPE (GtkSelectionData, gtk_selection_data, __gtk_selection_data_copy,
-                          __gtk_selection_data_free, ;)
+// i possibly woder why this would crash..
+//STLWRT_DEFINE_BOXED_TYPE (GtkSelectionData, gtk_selection_data, __gtk_selection_data_copy,
+ //                         __gtk_selection_data_free, ;)
 
-STLWRT_DEFINE_BOXED_TYPE (GtkTargetList, gtk_target_list, __gtk_target_list_copy,
-                          __gtk_target_list_free, ;)
+//STLWRT_DEFINE_BOXED_TYPE (GtkTargetList, gtk_target_list, gtk_target_list_copy,
+ //                        gtk_target_list_free, ;)
 
 static int 
 gtk_selection_bytes_per_item (gint format)

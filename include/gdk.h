@@ -100,7 +100,9 @@ void  	  SF(gdk_exit)		   	(gint	    	 error_code);
 gchar*	  SF(gdk_set_locale)	   	(void);
 #endif /* GDK_DISABLE_DEPRECATED */
 
-char *gdk_progclass;
+
+
+extern char *gdk_progclass;
 
 const char *         SF(gdk_get_program_class) (void);
 void                 SF(gdk_set_program_class) (const char *program_class);

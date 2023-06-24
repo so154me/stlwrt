@@ -642,10 +642,7 @@ gtk_recent_chooser_menu_get_items (GtkRecentChooser *chooser)
   GtkRecentChooserMenu *menu = GTK_RECENT_CHOOSER_MENU (chooser);
   GtkRecentChooserMenuPrivate *priv = gtk_recent_chooser_menu_get_props (menu)->priv;
 
-  return __gtk_recent_chooser_get_items (chooser,
-                                        priv->current_filter,
-                                        priv->sort_func,
-                                        priv->sort_data);
+  return __gtk_recent_chooser_get_items (chooser);
 }
 
 static GtkRecentManager *

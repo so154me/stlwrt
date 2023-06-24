@@ -350,7 +350,7 @@ static void gtk_widget_get_draw_rectangle (GtkWidget    *widget,
 
 
 /* --- variables --- */
-static gpointer         gtk_widget_parent_class = NULL;
+//static gpointer         gtk_widget_parent_class = NULL;
 static guint            widget_signals[LAST_SIGNAL] = { 0 };
 static GtkStyle        *gtk_default_style = NULL;
 static GSList          *colormap_stack = NULL;
@@ -3585,7 +3585,7 @@ __gtk_widget_queue_draw_area (GtkWidget *widget,
     return;
   
   /* Just return if the widget or one of its ancestors isn't mapped */
-  for (gtk_widget_get_props (w) = widget; gtk_widget_get_props (w) != NULL; gtk_widget_get_props (w) = gtk_widget_get_props (w)->parent)
+  for ( w = widget; gtk_widget_get_props (w) != NULL; w = gtk_widget_get_props (w)->parent)
     if (!__gtk_widget_get_mapped (w))
       return;
 
@@ -4102,14 +4102,14 @@ gtk_widget_common_ancestor (GtkWidget *widget_a,
   parent_a = widget_a;
   while (gtk_widget_get_props (parent_a)->parent)
     {
-      gtk_widget_get_props (parent_a) = gtk_widget_get_props (parent_a)->parent;
+     parent_a = gtk_widget_get_props (parent_a)->parent;
       depth_a++;
     }
 
   parent_b = widget_b;
   while (gtk_widget_get_props (parent_b)->parent)
     {
-      gtk_widget_get_props (parent_b) = gtk_widget_get_props (parent_b)->parent;
+     parent_b = gtk_widget_get_props (parent_b)->parent;
       depth_b++;
     }
 
@@ -4118,20 +4118,20 @@ gtk_widget_common_ancestor (GtkWidget *widget_a,
 
   while (depth_a > depth_b)
     {
-      gtk_widget_get_props (widget_a) = gtk_widget_get_props (widget_a)->parent;
+     widget_a = gtk_widget_get_props (widget_a)->parent;
       depth_a--;
     }
 
   while (depth_b > depth_a)
     {
-      gtk_widget_get_props (widget_b) = gtk_widget_get_props (widget_b)->parent;
+     widget_b = gtk_widget_get_props (widget_b)->parent;
       depth_b--;
     }
 
   while (widget_a != widget_b)
     {
-      gtk_widget_get_props (widget_a) = gtk_widget_get_props (widget_a)->parent;
-      gtk_widget_get_props (widget_b) = gtk_widget_get_props (widget_b)->parent;
+     widget_a = gtk_widget_get_props (widget_a)->parent;
+     widget_b = gtk_widget_get_props (widget_b)->parent;
     }
 
   return widget_a;
@@ -5312,7 +5312,7 @@ gtk_widget_real_grab_focus (GtkWidget *focus_widget)
 	    {
 	      while (gtk_widget_get_props (widget)->parent && gtk_widget_get_props (widget)->parent != gtk_widget_get_props (focus_widget)->parent)
 		{
-		  gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+		  widget =gtk_widget_get_props (widget)->parent;
 		  __gtk_container_set_focus_child (GTK_CONTAINER (widget), NULL);
 		}
 	    }
@@ -5335,7 +5335,7 @@ gtk_widget_real_grab_focus (GtkWidget *focus_widget)
       while (gtk_widget_get_props (widget)->parent)
 	{
 	  __gtk_container_set_focus_child (GTK_CONTAINER (gtk_widget_get_props (widget)->parent), gtk_widget_get_props (widget));
-	  gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+	  widget =gtk_widget_get_props (widget)->parent;
 	}
       if (GTK_IS_WINDOW (widget))
 	___gtk_window_internal_set_focus (GTK_WINDOW (widget), focus_widget);
@@ -8158,7 +8158,7 @@ __gtk_widget_get_toplevel (GtkWidget *widget)
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
   
   while (gtk_widget_get_props (widget)->parent)
-    gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+    widget =gtk_widget_get_props (widget)->parent;
   
   return widget;
 }
@@ -8187,7 +8187,7 @@ __gtk_widget_get_ancestor (GtkWidget *widget,
   g_return_val_if_fail (GTK_IS_WIDGET (widget), NULL);
   
   while (widget && !g_type_is_a (G_OBJECT_TYPE (widget), widget_type))
-    gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+    widget =gtk_widget_get_props (widget)->parent;
   
   if (!(widget && g_type_is_a (G_OBJECT_TYPE (widget), widget_type)))
     return NULL;
@@ -8227,7 +8227,7 @@ __gtk_widget_get_colormap (GtkWidget *widget)
       if (colormap)
 	return colormap;
 
-      gtk_widget_get_props (tmp_widget)= gtk_widget_get_props (tmp_widget)->parent;
+      tmp_widget= gtk_widget_get_props (tmp_widget)->parent;
     }
 
   return __gdk_screen_get_default_colormap (__gtk_widget_get_screen (widget));
@@ -8391,7 +8391,7 @@ __gtk_widget_is_ancestor (GtkWidget *widget,
     {
       if (gtk_widget_get_props (widget)->parent == ancestor)
 	return TRUE;
-      gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+      widget =gtk_widget_get_props (widget)->parent;
     }
   
   return FALSE;
@@ -10031,7 +10031,7 @@ __gtk_widget_path (GtkWidget *widget,
 	*(d++) = *(s--);
       len += l;
       
-      gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+      widget =gtk_widget_get_props (widget)->parent;
       
       if (widget)
 	rev_path[len++] = '.';
@@ -10096,7 +10096,7 @@ __gtk_widget_class_path (GtkWidget *widget,
 	*(d++) = *(s--);
       len += l;
       
-      gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+      widget =gtk_widget_get_props (widget)->parent;
       
       if (widget)
 	rev_path[len++] = '.';

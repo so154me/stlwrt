@@ -90,6 +90,7 @@ enum
 
 struct _GtkRecentChooserDefault
 {
+  //Lets hope this shit works!
   //GtkVBox parent_instance;
   
   GtkRecentManager *manager;
@@ -140,7 +141,7 @@ struct _GtkRecentChooserDefault
   gint loaded_items;
   guint load_state;
 };
-
+ 
 typedef struct _GtkRecentChooserDefaultClass
 {
   GtkVBoxClass parent_class;

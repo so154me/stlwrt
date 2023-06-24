@@ -147,7 +147,7 @@ __gtk_text_buffer_register_serialize_tagset (GtkTextBuffer *buffer,
                        tagset_name);
 
   format = __gtk_text_buffer_register_serialize_format (buffer, mime_type,
-                                                      ___gtk_text_buffer_serialize_rich_text,
+                                                      _gtk_text_buffer_serialize_rich_text,
                                                       NULL, NULL);
 
   if (tagset_name)
@@ -231,7 +231,7 @@ __gtk_text_buffer_register_deserialize_tagset (GtkTextBuffer *buffer,
                        tagset_name);
 
   format = __gtk_text_buffer_register_deserialize_format (buffer, mime_type,
-                                                        ___gtk_text_buffer_deserialize_rich_text,
+                                                        _gtk_text_buffer_deserialize_rich_text,
                                                         NULL, NULL);
 
   if (tagset_name)

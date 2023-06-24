@@ -5625,9 +5625,8 @@ gtk_default_draw_spinner (GtkStyle     *style,
   gint i;
   guint real_step;
 
-  __gtk_style_get (style, GTK_TYPE_SPINNER,
-                 "num-steps", &num_steps,
-                 NULL);
+  num_steps = 12;
+  //gtk_style_get (style, GTK_TYPE_SPINNER, "num-steps", &num_steps, NULL);
   real_step = step % num_steps;
 
   /* get cairo context */

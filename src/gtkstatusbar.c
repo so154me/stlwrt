@@ -208,32 +208,32 @@ gtk_statusbar_init (GtkStatusbar *statusbar)
   gtk_box_get_props (box)->spacing = 2;
   gtk_box_get_props (box)->homogeneous = FALSE;
 
-  gtk_status_bar_get_props (statusbar)->has_resize_grip = TRUE;
+  gtk_statusbar_get_props (statusbar)->has_resize_grip = TRUE;
 
   __gtk_widget_style_get (GTK_WIDGET (statusbar), "shadow-type", &shadow_type, NULL);
   
-  gtk_status_bar_get_props (statusbar)->frame = __gtk_frame_new (NULL);
-  __gtk_frame_set_shadow_type (GTK_FRAME (gtk_status_bar_get_props (statusbar)->frame), shadow_type);
-  __gtk_box_pack_start (box, gtk_status_bar_get_props (statusbar)->frame, TRUE, TRUE, 0);
-  __gtk_widget_show (gtk_status_bar_get_props (statusbar)->frame);
+  gtk_statusbar_get_props (statusbar)->frame = __gtk_frame_new (NULL);
+  __gtk_frame_set_shadow_type (GTK_FRAME (gtk_statusbar_get_props (statusbar)->frame), shadow_type);
+  __gtk_box_pack_start (box, gtk_statusbar_get_props (statusbar)->frame, TRUE, TRUE, 0);
+  __gtk_widget_show (gtk_statusbar_get_props (statusbar)->frame);
 
   message_area = __gtk_hbox_new (FALSE, 4);
-  __gtk_container_add (GTK_CONTAINER (gtk_status_bar_get_props (statusbar)->frame), message_area);
+  __gtk_container_add (GTK_CONTAINER (gtk_statusbar_get_props (statusbar)->frame), message_area);
   __gtk_widget_show (message_area);
 
-  gtk_status_bar_get_props (statusbar)->label = __gtk_label_new ("");
-  __gtk_label_set_single_line_mode (GTK_LABEL (gtk_status_bar_get_props (statusbar)->label), TRUE);
-  __gtk_misc_set_alignment (GTK_MISC (gtk_status_bar_get_props (statusbar)->label), 0.0, 0.5);
-  g_signal_connect (gtk_status_bar_get_props (statusbar)->label, "notify::selectable",
+  gtk_statusbar_get_props (statusbar)->label = __gtk_label_new ("");
+  __gtk_label_set_single_line_mode (GTK_LABEL (gtk_statusbar_get_props (statusbar)->label), TRUE);
+  __gtk_misc_set_alignment (GTK_MISC (gtk_statusbar_get_props (statusbar)->label), 0.0, 0.5);
+  g_signal_connect (gtk_statusbar_get_props (statusbar)->label, "notify::selectable",
 		    G_CALLBACK (label_selectable_changed), statusbar);
-  __gtk_label_set_ellipsize (GTK_LABEL (gtk_status_bar_get_props (statusbar)->label), PANGO_ELLIPSIZE_END);
-  __gtk_container_add (GTK_CONTAINER (message_area), gtk_status_bar_get_props (statusbar)->label);
-  __gtk_widget_show (gtk_status_bar_get_props (statusbar)->label);
+  __gtk_label_set_ellipsize (GTK_LABEL (gtk_statusbar_get_props (statusbar)->label), PANGO_ELLIPSIZE_END);
+  __gtk_container_add (GTK_CONTAINER (message_area), gtk_statusbar_get_props (statusbar)->label);
+  __gtk_widget_show (gtk_statusbar_get_props (statusbar)->label);
 
-  gtk_status_bar_get_props (statusbar)->seq_context_id = 1;
-  gtk_status_bar_get_props (statusbar)->seq_message_id = 1;
-  gtk_status_bar_get_props (statusbar)->messages = NULL;
-  gtk_status_bar_get_props (statusbar)->keys = NULL;
+  gtk_statusbar_get_props (statusbar)->seq_context_id = 1;
+  gtk_statusbar_get_props (statusbar)->seq_message_id = 1;
+  gtk_statusbar_get_props (statusbar)->messages = NULL;
+  gtk_statusbar_get_props (statusbar)->keys = NULL;
 }
 
 static GtkBuildableIface *parent_buildable_iface;
@@ -251,7 +251,7 @@ gtk_statusbar_buildable_get_internal_child (GtkBuildable *buildable,
                                             const gchar  *childname)
 {
     if (strcmp (childname, "message_area") == 0)
-      return G_OBJECT (__gtk_bin_get_child (GTK_BIN (gtk_status_bar_get_props (GTK_STATUSBAR (buildable))->frame)));
+      return G_OBJECT (__gtk_bin_get_child (GTK_BIN (gtk_statusbar_get_props (GTK_STATUSBAR (buildable))->frame)));
 
     return parent_buildable_iface->get_internal_child (buildable,
                                                        builder,
@@ -281,7 +281,7 @@ gtk_statusbar_update (GtkStatusbar *statusbar,
   if (!text)
     text = "";
 
-  __gtk_label_set_text (GTK_LABEL (gtk_status_bar_get_props (statusbar)->label), text);
+  __gtk_label_set_text (GTK_LABEL (gtk_statusbar_get_props (statusbar)->label), text);
 }
 
 /**
@@ -312,9 +312,9 @@ __gtk_statusbar_get_context_id (GtkStatusbar *statusbar,
   id = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (statusbar), string));
   if (id == 0)
     {
-      id = gtk_status_bar_get_props (statusbar)->seq_context_id++;
+      id = gtk_statusbar_get_props (statusbar)->seq_context_id++;
       g_object_set_data_full (G_OBJECT (statusbar), string, GUINT_TO_POINTER (id), NULL);
-      gtk_status_bar_get_props (statusbar)->keys = g_slist_prepend (gtk_status_bar_get_props (statusbar)->keys, string);
+      gtk_statusbar_get_props (statusbar)->keys = g_slist_prepend (gtk_statusbar_get_props (statusbar)->keys, string);
     }
   else
     g_free (string);
@@ -347,9 +347,9 @@ __gtk_statusbar_push (GtkStatusbar *statusbar,
   msg = g_slice_new (GtkStatusbarMsg);
   msg->text = g_strdup (text);
   msg->context_id = context_id;
-  msg->message_id = gtk_status_bar_get_props (statusbar)->seq_message_id++;
+  msg->message_id = gtk_statusbar_get_props (statusbar)->seq_message_id++;
 
-  gtk_status_bar_get_props (statusbar)->messages = g_slist_prepend (gtk_status_bar_get_props (statusbar)->messages, msg);
+  gtk_statusbar_get_props (statusbar)->messages = g_slist_prepend (gtk_statusbar_get_props (statusbar)->messages, msg);
 
   g_signal_emit (statusbar,
 		 statusbar_signals[SIGNAL_TEXT_PUSHED],
@@ -380,17 +380,17 @@ __gtk_statusbar_pop (GtkStatusbar *statusbar,
 
   g_return_if_fail (GTK_IS_STATUSBAR (statusbar));
 
-  if (gtk_status_bar_get_props (statusbar)->messages)
+  if (gtk_statusbar_get_props (statusbar)->messages)
     {
       GSList *list;
 
-      for (list = gtk_status_bar_get_props (statusbar)->messages; list; list = list->next)
+      for (list = gtk_statusbar_get_props (statusbar)->messages; list; list = list->next)
 	{
 	  msg = list->data;
 
 	  if (msg->context_id == context_id)
 	    {
-	      gtk_status_bar_get_props (statusbar)->messages = g_slist_remove_link (gtk_status_bar_get_props (statusbar)->messages,
+	      gtk_statusbar_get_props (statusbar)->messages = g_slist_remove_link (gtk_statusbar_get_props (statusbar)->messages,
 							 list);
 	      g_free (msg->text);
               g_slice_free (GtkStatusbarMsg, msg);
@@ -400,7 +400,7 @@ __gtk_statusbar_pop (GtkStatusbar *statusbar,
 	}
     }
 
-  msg = gtk_status_bar_get_props (statusbar)->messages ? gtk_status_bar_get_props (statusbar)->messages->data : NULL;
+  msg = gtk_statusbar_get_props (statusbar)->messages ? gtk_statusbar_get_props (statusbar)->messages->data : NULL;
 
   g_signal_emit (statusbar,
 		 statusbar_signals[SIGNAL_TEXT_POPPED],
@@ -428,7 +428,7 @@ __gtk_statusbar_remove (GtkStatusbar *statusbar,
   g_return_if_fail (GTK_IS_STATUSBAR (statusbar));
   g_return_if_fail (message_id > 0);
 
-  msg = gtk_status_bar_get_props (statusbar)->messages ? gtk_status_bar_get_props (statusbar)->messages->data : NULL;
+  msg = gtk_statusbar_get_props (statusbar)->messages ? gtk_statusbar_get_props (statusbar)->messages->data : NULL;
   if (msg)
     {
       GSList *list;
@@ -441,14 +441,14 @@ __gtk_statusbar_remove (GtkStatusbar *statusbar,
 	  return;
 	}
       
-      for (list = gtk_status_bar_get_props (statusbar)->messages; list; list = list->next)
+      for (list = gtk_statusbar_get_props (statusbar)->messages; list; list = list->next)
 	{
 	  msg = list->data;
 	  
 	  if (msg->context_id == context_id &&
 	      msg->message_id == message_id)
 	    {
-	      gtk_status_bar_get_props (statusbar)->messages = g_slist_remove_link (gtk_status_bar_get_props (statusbar)->messages, list);
+	      gtk_statusbar_get_props (statusbar)->messages = g_slist_remove_link (gtk_statusbar_get_props (statusbar)->messages, list);
 	      g_free (msg->text);
               g_slice_free (GtkStatusbarMsg, msg);
 	      g_slist_free_1 (list);
@@ -478,10 +478,10 @@ __gtk_statusbar_remove_all (GtkStatusbar *statusbar,
 
   g_return_if_fail (GTK_IS_STATUSBAR (statusbar));
 
-  if (gtk_status_bar_get_props (statusbar)->messages == NULL)
+  if (gtk_statusbar_get_props (statusbar)->messages == NULL)
     return;
 
-  msg = gtk_status_bar_get_props (statusbar)->messages->data;
+  msg = gtk_statusbar_get_props (statusbar)->messages->data;
 
   /* care about signal emission if the topmost item is removed */
   if (msg->context_id == context_id)
@@ -489,11 +489,11 @@ __gtk_statusbar_remove_all (GtkStatusbar *statusbar,
       __gtk_statusbar_pop (statusbar, context_id);
 
       prev = NULL;
-      list = gtk_status_bar_get_props (statusbar)->messages;
+      list = gtk_statusbar_get_props (statusbar)->messages;
     }
   else
     {
-      prev = gtk_status_bar_get_props (statusbar)->messages;
+      prev = gtk_statusbar_get_props (statusbar)->messages;
       list = prev->next;
     }
 
@@ -504,7 +504,7 @@ __gtk_statusbar_remove_all (GtkStatusbar *statusbar,
       if (msg->context_id == context_id)
         {
           if (prev == NULL)
-            gtk_status_bar_get_props (statusbar)->messages = list->next;
+            gtk_statusbar_get_props (statusbar)->messages = list->next;
           else
             prev->next = list->next;
 
@@ -513,7 +513,7 @@ __gtk_statusbar_remove_all (GtkStatusbar *statusbar,
           g_slist_free_1 (list);
 
           if (prev == NULL)
-            prev = gtk_status_bar_get_props (statusbar)->messages;
+            prev = gtk_statusbar_get_props (statusbar)->messages;
 
           if (prev)
             list = prev->next;
@@ -544,21 +544,21 @@ __gtk_statusbar_set_has_resize_grip (GtkStatusbar *statusbar,
 
   setting = setting != FALSE;
 
-  if (setting != gtk_status_bar_get_props (statusbar)->has_resize_grip)
+  if (setting != gtk_statusbar_get_props (statusbar)->has_resize_grip)
     {
-      gtk_status_bar_get_props (statusbar)->has_resize_grip = setting;
-      __gtk_widget_queue_resize (gtk_status_bar_get_props (statusbar)->label);
+      gtk_statusbar_get_props (statusbar)->has_resize_grip = setting;
+      __gtk_widget_queue_resize (gtk_statusbar_get_props (statusbar)->label);
       __gtk_widget_queue_draw (GTK_WIDGET (statusbar));
 
       if (__gtk_widget_get_realized (GTK_WIDGET (statusbar)))
         {
-          if (gtk_status_bar_get_props (statusbar)->has_resize_grip && gtk_status_bar_get_props (statusbar)->grip_window == NULL)
+          if (gtk_statusbar_get_props (statusbar)->has_resize_grip && gtk_statusbar_get_props (statusbar)->grip_window == NULL)
 	    {
 	      gtk_statusbar_create_window (statusbar);
 	      if (__gtk_widget_get_mapped (GTK_WIDGET (statusbar)))
-		__gdk_window_show (gtk_status_bar_get_props (statusbar)->grip_window);
+		__gdk_window_show (gtk_statusbar_get_props (statusbar)->grip_window);
 	    }
-          else if (!gtk_status_bar_get_props (statusbar)->has_resize_grip && gtk_status_bar_get_props (statusbar)->grip_window != NULL)
+          else if (!gtk_statusbar_get_props (statusbar)->has_resize_grip && gtk_statusbar_get_props (statusbar)->grip_window != NULL)
             gtk_statusbar_destroy_window (statusbar);
         }
       
@@ -579,7 +579,7 @@ __gtk_statusbar_get_has_resize_grip (GtkStatusbar *statusbar)
 {
   g_return_val_if_fail (GTK_IS_STATUSBAR (statusbar), FALSE);
 
-  return gtk_status_bar_get_props (statusbar)->has_resize_grip;
+  return gtk_statusbar_get_props (statusbar)->has_resize_grip;
 }
 
 /**
@@ -597,7 +597,7 @@ __gtk_statusbar_get_message_area (GtkStatusbar *statusbar)
 {
   g_return_val_if_fail (GTK_IS_STATUSBAR (statusbar), NULL);
 
-  return __gtk_bin_get_child (GTK_BIN (gtk_status_bar_get_props (statusbar)->frame));
+  return __gtk_bin_get_child (GTK_BIN (gtk_statusbar_get_props (statusbar)->frame));
 }
 
 static void
@@ -630,7 +630,7 @@ gtk_statusbar_get_property (GObject    *object,
   switch (prop_id) 
     {
     case PROP_HAS_RESIZE_GRIP:
-      g_value_set_boolean (value, gtk_status_bar_get_props (statusbar)->has_resize_grip);
+      g_value_set_boolean (value, gtk_statusbar_get_props (statusbar)->has_resize_grip);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -681,7 +681,7 @@ get_grip_rect (GtkStatusbar *statusbar,
 static void
 set_grip_cursor (GtkStatusbar *statusbar)
 {
-  if (gtk_status_bar_get_props (statusbar)->has_resize_grip && gtk_status_bar_get_props (statusbar)->grip_window != NULL)
+  if (gtk_statusbar_get_props (statusbar)->has_resize_grip && gtk_statusbar_get_props (statusbar)->grip_window != NULL)
     {
       GtkWidget *widget = GTK_WIDGET (statusbar);
       GdkDisplay *display = __gtk_widget_get_display (widget);
@@ -696,11 +696,11 @@ set_grip_cursor (GtkStatusbar *statusbar)
 	    cursor_type = GDK_BOTTOM_LEFT_CORNER;
 
           cursor = __gdk_cursor_new_for_display (display, cursor_type);
-          __gdk_window_set_cursor (gtk_status_bar_get_props (statusbar)->grip_window, cursor);
+          __gdk_window_set_cursor (gtk_statusbar_get_props (statusbar)->grip_window, cursor);
           __gdk_cursor_unref (cursor);
         }
       else
-        __gdk_window_set_cursor (gtk_status_bar_get_props (statusbar)->grip_window, NULL);
+        __gdk_window_set_cursor (gtk_statusbar_get_props (statusbar)->grip_window, NULL);
     }
 }
 
@@ -715,7 +715,7 @@ gtk_statusbar_create_window (GtkStatusbar *statusbar)
   widget = GTK_WIDGET (statusbar);
 
   g_return_if_fail (__gtk_widget_get_realized (widget));
-  g_return_if_fail (gtk_status_bar_get_props (statusbar)->has_resize_grip);
+  g_return_if_fail (gtk_statusbar_get_props (statusbar)->has_resize_grip);
 
   get_grip_rect (statusbar, &rect);
 
@@ -730,12 +730,12 @@ gtk_statusbar_create_window (GtkStatusbar *statusbar)
 
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
-  gtk_status_bar_get_props (statusbar)->grip_window = __gdk_window_new (gtk_widget_get_props (widget)->window,
+  gtk_statusbar_get_props (statusbar)->grip_window = __gdk_window_new (gtk_widget_get_props (widget)->window,
                                            &attributes, attributes_mask);
 
-  __gdk_window_set_user_data (gtk_status_bar_get_props (statusbar)->grip_window, widget);
+  __gdk_window_set_user_data (gtk_statusbar_get_props (statusbar)->grip_window, widget);
 
-  __gdk_window_raise (gtk_status_bar_get_props (statusbar)->grip_window);
+  __gdk_window_raise (gtk_statusbar_get_props (statusbar)->grip_window);
 
   set_grip_cursor (statusbar);
 }
@@ -761,9 +761,9 @@ gtk_statusbar_state_changed (GtkWidget    *widget,
 static void
 gtk_statusbar_destroy_window (GtkStatusbar *statusbar)
 {
-  __gdk_window_set_user_data (gtk_status_bar_get_props (statusbar)->grip_window, NULL);
-  __gdk_window_destroy (gtk_status_bar_get_props (statusbar)->grip_window);
-  gtk_status_bar_get_props (statusbar)->grip_window = NULL;
+  __gdk_window_set_user_data (gtk_statusbar_get_props (statusbar)->grip_window, NULL);
+  __gdk_window_destroy (gtk_statusbar_get_props (statusbar)->grip_window);
+  gtk_statusbar_get_props (statusbar)->grip_window = NULL;
 }
 
 static void
@@ -775,7 +775,7 @@ gtk_statusbar_realize (GtkWidget *widget)
 
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->realize (widget);
 
-  if (gtk_status_bar_get_props (statusbar)->has_resize_grip)
+  if (gtk_statusbar_get_props (statusbar)->has_resize_grip)
     gtk_statusbar_create_window (statusbar);
 }
 
@@ -786,7 +786,7 @@ gtk_statusbar_unrealize (GtkWidget *widget)
 
   statusbar = GTK_STATUSBAR (widget);
 
-  if (gtk_status_bar_get_props (statusbar)->grip_window)
+  if (gtk_statusbar_get_props (statusbar)->grip_window)
     gtk_statusbar_destroy_window (statusbar);
 
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->unrealize (widget);
@@ -801,8 +801,8 @@ gtk_statusbar_map (GtkWidget *widget)
 
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->map (widget);
 
-  if (gtk_status_bar_get_props (statusbar)->grip_window)
-    __gdk_window_show (gtk_status_bar_get_props (statusbar)->grip_window);
+  if (gtk_statusbar_get_props (statusbar)->grip_window)
+    __gdk_window_show (gtk_statusbar_get_props (statusbar)->grip_window);
 }
 
 static void
@@ -812,8 +812,8 @@ gtk_statusbar_unmap (GtkWidget *widget)
 
   statusbar = GTK_STATUSBAR (widget);
 
-  if (gtk_status_bar_get_props (statusbar)->grip_window)
-    __gdk_window_hide (gtk_status_bar_get_props (statusbar)->grip_window);
+  if (gtk_statusbar_get_props (statusbar)->grip_window)
+    __gdk_window_hide (gtk_statusbar_get_props (statusbar)->grip_window);
 
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->unmap (widget);
 }
@@ -828,9 +828,9 @@ gtk_statusbar_button_press (GtkWidget      *widget,
   
   statusbar = GTK_STATUSBAR (widget);
   
-  if (!gtk_status_bar_get_props (statusbar)->has_resize_grip ||
+  if (!gtk_statusbar_get_props (statusbar)->has_resize_grip ||
       event->type != GDK_BUTTON_PRESS ||
-      event->window != gtk_status_bar_get_props (statusbar)->grip_window)
+      event->window != gtk_statusbar_get_props (statusbar)->grip_window)
     return FALSE;
   
   ancestor = __gtk_widget_get_toplevel (widget);
@@ -868,7 +868,7 @@ gtk_statusbar_expose_event (GtkWidget      *widget,
 
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->expose_event (widget, event);
 
-  if (gtk_status_bar_get_props (statusbar)->has_resize_grip)
+  if (gtk_statusbar_get_props (statusbar)->has_resize_grip)
     {
       GdkWindowEdge edge;
       
@@ -904,7 +904,7 @@ gtk_statusbar_size_request (GtkWidget      *widget,
   statusbar = GTK_STATUSBAR (widget);
 
   __gtk_widget_style_get (GTK_WIDGET (statusbar), "shadow-type", &shadow_type, NULL);  
-  __gtk_frame_set_shadow_type (GTK_FRAME (gtk_status_bar_get_props (statusbar)->frame), shadow_type);
+  __gtk_frame_set_shadow_type (GTK_FRAME (gtk_statusbar_get_props (statusbar)->frame), shadow_type);
   
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->size_request (widget, requisition);
 }
@@ -919,7 +919,7 @@ has_extra_children (GtkStatusbar *statusbar)
   GtkBoxChild *child, *frame;
 
   /* If the internal frame has been modified assume we have extra children */
-  if (__gtk_bin_get_child (GTK_BIN (gtk_status_bar_get_props (statusbar)->frame)) != gtk_status_bar_get_props (statusbar)->label)
+  if (__gtk_bin_get_child (GTK_BIN (gtk_statusbar_get_props (statusbar)->frame)) != gtk_statusbar_get_props (statusbar)->label)
     return TRUE;
 
   frame = NULL;
@@ -927,7 +927,7 @@ has_extra_children (GtkStatusbar *statusbar)
     {
       frame = l->data;
 
-      if (frame->widget == gtk_status_bar_get_props (statusbar)->frame)
+      if (frame->widget == gtk_statusbar_get_props (statusbar)->frame)
 	break;
     }
   
@@ -953,7 +953,7 @@ gtk_statusbar_size_allocate  (GtkWidget     *widget,
   gboolean extra_children = FALSE;
   GdkRectangle rect;
 
-  if (gtk_status_bar_get_props (statusbar)->has_resize_grip)
+  if (gtk_statusbar_get_props (statusbar)->has_resize_grip)
     {
       get_grip_rect (statusbar, &rect);
 
@@ -977,7 +977,7 @@ gtk_statusbar_size_allocate  (GtkWidget     *widget,
   /* chain up normally */
   GTK_WIDGET_CLASS (gtk_statusbar_parent_class)->size_allocate (widget, allocation);
 
-  if (gtk_status_bar_get_props (statusbar)->has_resize_grip)
+  if (gtk_statusbar_get_props (statusbar)->has_resize_grip)
     {
       if (extra_children) 
 	{
@@ -991,13 +991,13 @@ gtk_statusbar_size_allocate  (GtkWidget     *widget,
 	{
 	  GtkWidget *child;
 
-	  /* Use the frame's child instead of gtk_status_bar_get_props (statusbar)->label directly, in case
+	  /* Use the frame's child instead of gtk_statusbar_get_props (statusbar)->label directly, in case
 	   * the label has been replaced by a container as the frame's child
 	   * (and the label reparented into that container).
 	   */
-	  child = __gtk_bin_get_child (GTK_BIN (gtk_status_bar_get_props (statusbar)->frame));
+	  child = __gtk_bin_get_child (GTK_BIN (gtk_statusbar_get_props (statusbar)->frame));
 
-	  if (gtk_widget_get_props (child)->allocation.width + rect.width > gtk_widget_get_props (gtk_status_bar_get_props (statusbar)->frame)->allocation.width)
+	  if (gtk_widget_get_props (child)->allocation.width + rect.width > gtk_widget_get_props (gtk_statusbar_get_props (statusbar)->frame)->allocation.width)
 	    {
 	      /* shrink the label to make room for the grip */
 	      *allocation = gtk_widget_get_props (child)->allocation;
@@ -1009,12 +1009,12 @@ gtk_statusbar_size_allocate  (GtkWidget     *widget,
 	    }
 	}
 
-      if (gtk_status_bar_get_props (statusbar)->grip_window)
+      if (gtk_statusbar_get_props (statusbar)->grip_window)
 	{
           get_grip_rect (statusbar, &rect);
 
-	  __gdk_window_raise (gtk_status_bar_get_props (statusbar)->grip_window);
-	  __gdk_window_move_resize (gtk_status_bar_get_props (statusbar)->grip_window,
+	  __gdk_window_raise (gtk_statusbar_get_props (statusbar)->grip_window);
+	  __gdk_window_move_resize (gtk_statusbar_get_props (statusbar)->grip_window,
 				  rect.x, rect.y,
 				  rect.width, rect.height);
 	}
@@ -1030,6 +1030,6 @@ label_selectable_changed (GtkWidget  *label,
   GtkStatusbar *statusbar = GTK_STATUSBAR (data);
 
   if (statusbar && 
-      gtk_status_bar_get_props (statusbar)->has_resize_grip && gtk_status_bar_get_props (statusbar)->grip_window)
-    __gdk_window_raise (gtk_status_bar_get_props (statusbar)->grip_window);
+      gtk_statusbar_get_props (statusbar)->has_resize_grip && gtk_statusbar_get_props (statusbar)->grip_window)
+    __gdk_window_raise (gtk_statusbar_get_props (statusbar)->grip_window);
 }

@@ -33,7 +33,7 @@ G_BEGIN_DECLS
 #define GTK_RECENT_CHOOSER_DEFAULT(obj)    (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_RECENT_CHOOSER_DEFAULT, GtkRecentChooserDefault))
 #define GTK_IS_RECENT_CHOOSER_DEFAULT(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_RECENT_CHOOSER_DEFAULT))
 
-STLWRT_DECLARE_OPAQUE_TYPE(GtkRecentChooserDefault, _gtk_recent_chooser_default)
+STLWRT_DECLARE_FTYPE_VPARENT(GtkRecentChooserDefault, _gtk_recent_chooser_default, GtkVBox)
 
 GtkWidget *_gtk_recent_chooser_default_new      (GtkRecentManager *recent_manager);
 

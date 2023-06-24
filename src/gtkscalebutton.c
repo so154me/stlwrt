@@ -1420,7 +1420,7 @@ gtk_scale_button_scale_new (GtkScaleButton *button)
                         "draw-value",  FALSE,
                         NULL);
 
-  scale->button = button;
+  _gtk_scale_button_scale_get_props (button)->button = button;
 
   g_signal_connect (scale, "grab-notify",
                     G_CALLBACK (cb_scale_grab_notify), button);
@@ -1457,7 +1457,7 @@ static gboolean
 gtk_scale_button_scale_release (GtkWidget      *widget,
 				GdkEventButton *event)
 {
-  GtkScaleButton *button = GTK_SCALE_BUTTON_SCALE (widget)->button;
+  GtkScaleButton *button = _gtk_scale_button_scale_get_props(GTK_SCALE_BUTTON_SCALE (widget))->button;
   gboolean res;
 
   if (gtk_scale_button_get_props (button)->priv->timeout)
@@ -1565,7 +1565,7 @@ gtk_scale_button_update_icon (GtkScaleButton *button)
 static void
 gtk_scale_button_scale_value_changed (GtkRange *range)
 {
-  GtkScaleButton *button = GTK_SCALE_BUTTON_SCALE (range)->button;
+  GtkScaleButton *button = _gtk_scale_button_scale_get_props (GTK_SCALE_BUTTON_SCALE (range))->button;
   gdouble value;
 
   value = __gtk_range_get_value (range);

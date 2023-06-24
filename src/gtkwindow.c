@@ -1608,7 +1608,7 @@ __gtk_window_set_focus (GtkWindow *window,
 	{
 	  while (gtk_widget_get_props (widget)->parent)
 	    {
-	      gtk_widget_get_props (widget) = gtk_widget_get_props (widget)->parent;
+	      widget = gtk_widget_get_props (widget)->parent;
 	      __gtk_container_set_focus_child (GTK_CONTAINER (widget), NULL);
 	    }
 	}
@@ -5539,7 +5539,7 @@ ___gtk_window_unset_focus_and_default (GtkWindow *window,
       child = gtk_window_get_props (window)->focus_widget;
       
       while (child && child != widget)
-	gtk_widget_get_props (child) = gtk_widget_get_props (child)->parent;
+	child = gtk_widget_get_props (child)->parent;
   
       if (child == widget)
 	__gtk_window_set_focus (GTK_WINDOW (window), NULL);
@@ -5548,7 +5548,7 @@ ___gtk_window_unset_focus_and_default (GtkWindow *window,
   child = gtk_window_get_props (window)->default_widget;
       
   while (child && child != widget)
-    gtk_widget_get_props (child) = gtk_widget_get_props (child)->parent;
+   child = gtk_widget_get_props (child)->parent;
       
   if (child == widget)
     __gtk_window_set_default (window, NULL);

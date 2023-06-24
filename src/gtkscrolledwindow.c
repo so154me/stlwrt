@@ -314,7 +314,7 @@ gtk_scrolled_window_class_init (GtkScrolledWindowClass *class)
    */
   signals[SCROLL_CHILD] =
     g_signal_new (I_("scroll-child"),
-                  G_TYPE_FROM_CLASS (object_class),
+                  G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkScrolledWindowClass, scroll_child),
                   NULL, NULL,
@@ -324,7 +324,7 @@ gtk_scrolled_window_class_init (GtkScrolledWindowClass *class)
 		  G_TYPE_BOOLEAN);
   signals[MOVE_FOCUS_OUT] =
     g_signal_new (I_("move-focus-out"),
-                  G_TYPE_FROM_CLASS (object_class),
+                  G_TYPE_FROM_CLASS (gobject_class),
                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                   G_STRUCT_OFFSET (GtkScrolledWindowClass, move_focus_out),
                   NULL, NULL,

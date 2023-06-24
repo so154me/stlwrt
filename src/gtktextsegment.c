@@ -101,7 +101,7 @@ gtk_text_line_segment_split (const GtkTextIter *iter)
   GtkTextLine *line;
   int count;
 
-  line = ___gtk_text_iter_get_text_line (iter);
+  line = _gtk_text_iter_get_text_line (iter);
   tree = _gtk_text_iter_get_btree (iter);
 
   count = __gtk_text_iter_get_line_index (iter);

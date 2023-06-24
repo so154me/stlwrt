@@ -777,7 +777,7 @@ gtk_settings_class_init (GtkSettingsClass *class)
    * and may include "file", "cups", "lpr" or "papi".
    *
    * Since: 2.10
-   */
+
   result = settings_install_property_parser (class,
                                              g_param_spec_string ("gtk-print-backends",
                                                                   P_("Default print backend"),
@@ -786,7 +786,8 @@ gtk_settings_class_init (GtkSettingsClass *class)
                                                                   GTK_PARAM_READWRITE),
                                              NULL);
   g_assert (result == PROP_PRINT_BACKENDS);
-
+   */
+   
   /**
    * GtkSettings:gtk-print-preview-command:
    *
@@ -801,16 +802,16 @@ gtk_settings_class_init (GtkSettingsClass *class)
    * and the print settings file when it is done.
    *
    * Since: 2.10
-   */
+
   result = settings_install_property_parser (class,
                                              g_param_spec_string ("gtk-print-preview-command",
                                                                   P_("Default command to run when displaying a print preview"),
-                                                                  P_("Command to run when displaying a print preview"),
-                                                                  STLWRT_PRINT_PREVIEW_COMMAND,
+                                                                  P_("Command to run when displaying a print preview"),                                                                  STLWRT_PRINT_PREVIEW_COMMAND,
                                                                   GTK_PARAM_READWRITE),
                                              NULL); 
   g_assert (result == PROP_PRINT_PREVIEW_COMMAND);
-
+   */
+   
   /**
    * GtkSettings:gtk-enable-mnemonics:
    *

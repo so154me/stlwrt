@@ -998,7 +998,7 @@ __gtk_tree_selection_select_all (GtkTreeSelection *selection)
   g_return_if_fail (GTK_IS_TREE_SELECTION (selection));
   g_return_if_fail (gtk_tree_selection_get_props (selection)->tree_view != NULL);
 
-  if (gtk_tree_view_get_props (gtk_tree_selection_get_props (selection)->tree_view)->priv->tree == NULL || gtk_tree_view_get_props (gtk_tree_selection_get_props (selection)->tree_view)->props->model == NULL)
+  if (gtk_tree_view_get_props (gtk_tree_selection_get_props (selection)->tree_view)->priv->tree == NULL || gtk_tree_view_get_props (gtk_tree_selection_get_props (selection)->tree_view)->priv->model == NULL)
     return;
 
   g_return_if_fail (gtk_tree_selection_get_props (selection)->type == GTK_SELECTION_MULTIPLE);

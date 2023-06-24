@@ -193,7 +193,9 @@ send_batch (SearchThreadData *data)
   data->uri_hits = NULL;
 }
 
-static GPrivate search_thread_data = G_PRIVATE_INIT;
+
+// have fun debugging this lmao
+static GPrivate search_thread_data =  G_PRIVATE_INIT (g_free);
 
 #ifdef HAVE_FTW_H
 static int

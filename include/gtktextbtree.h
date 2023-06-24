@@ -32,6 +32,8 @@
 #define DV(x)
 #endif
 
+typedef struct _GtkTextLineData GtkTextLineData;
+typedef struct _GtkTextLine GtkTextLine;
 
 #include <gtktextbuffer.h>
 #include <gtktexttag.h>
@@ -41,9 +43,6 @@
 #include <gtktextiter.h>
 
 G_BEGIN_DECLS
-
-typedef struct _GtkTextLineData GtkTextLineData;
-typedef struct _GtkTextLine GtkTextLine;
 
 GtkTextBTree  *_gtk_text_btree_new        (GtkTextTagTable *table,
                                            GtkTextBuffer   *buffer);
